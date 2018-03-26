@@ -137,8 +137,8 @@ struct Response {
         system @2 : SystemMessage;
 
         # logon-logoff
-        logon @3 :LogonResponse;
-        logoff @4 :LogoffResponse;
+        logonAck @3 :LogonAck;
+        logoffAck @4 :LogoffAck;
 
         # trading
         executionReport @5 :ExecutionReport;
@@ -232,13 +232,13 @@ struct SystemMessage {
 }
 
 
-struct LogonResponse {
+struct LogonAck {
 	success @0 :Bool;
     message @1 :Text;
 }
 
 
-struct LogoffResponse {
+struct LogoffAck {
 	success @0 :Bool;
     message @1 :Text;
 }
