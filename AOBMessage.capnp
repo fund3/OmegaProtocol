@@ -37,8 +37,8 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 
 struct Response {
     body :union {
-        MarketDataIncrementalRefresh @0 :MarketDataIncrementalRefresh;
-        MarketDataSnapshotFullRefresh @1 :MarketDataSnapshotFullRefresh;
+        marketDataIncrementalRefresh @0 :MarketDataIncrementalRefresh;
+        marketDataSnapshotFullRefresh @1 :MarketDataSnapshotFullRefresh;
     }
 }
 
