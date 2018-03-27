@@ -23,7 +23,7 @@ struct Request {
 }
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    header @0 :StandardHeader;
+    header @0 :Header;
     request @1 :Text;
     entryTypes @2 :List(EntryType);
     instruments @3 :List(Instrument);
