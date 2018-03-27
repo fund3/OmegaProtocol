@@ -24,7 +24,7 @@ struct Request {
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
     header @0 :Header;
-    request @1 :Text;
+    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @2 :List(EntryType);
     instruments @3 :List(Instrument);
     depth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
@@ -44,10 +44,10 @@ struct Response {
 
 struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     header @0 :Header;
-    request @1 :Text;
+    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     group @2 :MDIncGrp;
-    market @3 :Exchange;
-    struct MDIncGrp {
+    market @3 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    struct MDIncGrp { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
         updateAction @0 :UpdateAction;
         instrument @1 :Instrument;
         entries @2 :List(MDEntry);
@@ -56,11 +56,11 @@ struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRe
 
 struct SnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
     header @0 :Header;
-    request @1 :Text;
+    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     instrument @2 :Instrument;
     group @3 :MDFullGrp;
-    market @4 :Exchange;
-    struct MDFullGrp {
+    market @4 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    struct MDFullGrp { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
         entries @0 :List(MDEntry);
     }
 }
@@ -89,8 +89,8 @@ struct MDEntry {
     size @2 :Float64;
     date @3 :Date;
     time @4 :Time;
-    position @5 :UInt8;
-    market @6 :Exchange;
+    position @5 :UInt8; # http://fixwiki.org/fixwiki/MDEntryPositionNo
+    market @6 :Exchange; # http://fixwiki.org/fixwiki/MDMkt
 }
 
 enum EntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
