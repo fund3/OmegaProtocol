@@ -74,6 +74,7 @@ struct StandardHeader { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2
     senderCompID @1 :Text;
     targetCompID @2 :Text;
     sendingTime @3 :Timestamp;
+    msgSeqNum @4 :UInt16;
 }
 
 enum MsgType { # http://fixwiki.org/fixwiki/MsgType
