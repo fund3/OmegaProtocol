@@ -38,7 +38,7 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 struct Response {
     body :union {
         incrementalRefresh @0 :IncrementalRefresh;
-        snapshotFullRefresh @1 :SnapshotFullRefresh;
+        fullRefresh @1 :FullRefresh;
     }
 }
 
@@ -50,18 +50,18 @@ struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRe
     struct MDIncGrp { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
         updateAction @0 :UpdateAction;
         instrument @1 :Instrument;
-        entries @2 :List(MDEntry);
+        entries @2 :List(Entry);
     }
 }
 
-struct SnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
+struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
     header @0 :Header;
     request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     instrument @2 :Instrument;
     group @3 :MDFullGrp;
     market @4 :Exchange; # http://fixwiki.org/fixwiki/MarketID
     struct MDFullGrp { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
-        entries @0 :List(MDEntry);
+        entries @0 :List(Entry);
     }
 }
 
@@ -80,10 +80,10 @@ struct Header { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
 enum MsgType { # http://fixwiki.org/fixwiki/MsgType
     request @0;
     incrementalRefresh @1;
-    snapshotFullRefresh @2;
+    fullRefresh @2;
 }
 
-struct MDEntry {
+struct Entry {
     type @0 :EntryType;
     price @1 :Float64;
     size @2 :Float64;
