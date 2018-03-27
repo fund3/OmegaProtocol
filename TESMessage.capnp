@@ -82,8 +82,8 @@ struct Request {
 
 
 struct PlaceOrder {
-    clOrderID @0 :Int64;
-    orderID @1 :Text;           # empty in client request
+    clientOrderID @0 :Int64;
+    orderID @1 :Text;           	# empty in client request
     currencyPair @2 :Text;
     orderSide @3 :OrderSide;
     orderType @4 :OrderType;
@@ -96,30 +96,30 @@ struct PlaceOrder {
 
 struct ReplaceOrder {
     orderID @0 :Text;
-    clOrderID @1 :Int64;        # empty in client request
-    exOrderID @2 :Text;         # empty in client request
-    orderPrice @3 :Float64;     # if 0, change quantity only
-    orderQuantity @4 :Float64;  # if 0, change price only
+    clientOrderID @1 :Int64;        # empty in client request
+    exchangeOrderID @2 :Text;       # empty in client request
+    orderPrice @3 :Float64;     	# if 0, change quantity only
+    orderQuantity @4 :Float64;  	# if 0, change price only
 }
 
 
 struct CancelOrder {
     orderID @0 :Text;
-    clOrderID @1 :Int64;        # empty in client request
-    exOrderID @2 :Text;         # empty in client request
+    clientOrderID @1 :Int64;        # empty in client request
+    exchangeOrderID @2 :Text;       # empty in client request
 }
 
 
 struct GetAccountBalances {
-    exchange @0 :Text;          # if empty, return balances from all account
+    exchange @0 :Text;          	# if empty, return balances from all account
 }
 
 
 struct GetWorkingOrders {
-    orderID @0 :Text;           # if empty, return all working orders by exchange specified in <exchange> field
-    clOrderID @1 :Int64;        # empty in client request
-    exOrderID @2 :Text;         # empty in client request
-    exchange @3 :Text;          # if empty, return all working orders from all supported exchanges
+    orderID @0 :Text;           	# if empty, return all working orders by exchange specified in <exchange> field
+    clientOrderID @1 :Int64;        # empty in client request
+    exchangeOrderID @2 :Text;       # empty in client request
+    exchange @3 :Text;          	# if empty, return all working orders from all supported exchanges
 }
 
 
@@ -153,8 +153,8 @@ struct Response {
 # sends as respond to place, modify, cancel, cancel all request
 struct ExecutionReport {
     orderID @0 :Text;
-    clOrderID @1 :Int64;
-    exOrderID @2 :Text;
+    clientOrderID @1 :Int64;
+    exchangeOrderID @2 :Text;
     orderStatus @3 :OrderStatus;
 
     type :union {
@@ -176,8 +176,8 @@ struct OrderFilled{
 
 
 struct OrderReplaced {
-    newOrderPrice @0 :Float64;
-    newOrderQuantity @1 :Float64;
+    newOrderPrice @0 :Float64;			# 0 if no changes
+    newOrderQuantity @1 :Float64;		# 0 if no changes
 }
 
 
@@ -211,8 +211,8 @@ struct ExchangeAccountBalances {
 ### OrderData ###
 struct OrderData {
     orderID @0 :Text;
-    clOrderID @1 :Int64;
-    exOrderID @2 :Text;
+    clientOrderID @1 :Int64;
+    exchangeOrderID @2 :Text;
     currencyPair @3 :Text;
     orderSide @4 :OrderSide;
     orderType @5 :OrderType;
