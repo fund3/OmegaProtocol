@@ -90,6 +90,7 @@ struct MDEntry {
     date @3 :Date;
     time @4 :Time;
     positionNo @5 :UInt8;
+    mkt @6 :Exchange;
 }
 
 enum MDEntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
