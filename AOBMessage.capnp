@@ -27,8 +27,9 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @2 :List(EntryType);
     instruments @3 :List(Instrument);
-    depth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregated @5 :AggregatedBook;
+    markets @4 :List(Exchange); # http://fixwiki.org/fixwiki/MarketSegmentScopeGrp/FIX.5.0SP2%2B
+    depth @5 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    aggregated @6 :AggregatedBook;
 }
 
 #######################################################################################################
