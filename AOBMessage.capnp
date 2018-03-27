@@ -47,10 +47,16 @@ struct MarketDataSnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSn
 #######################################################################################################
 
 struct StandardHeader { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
-    msgType @0 :Text;
+    msgType @0 :MsgType;
     senderCompID @1 :Text;
     targetCompID @2 :Text;
     sendingTime @3 :Timestamp;
+}
+
+enum MsgType { # http://fixwiki.org/fixwiki/MsgType
+    request @0;
+    incrementalRefresh @1;
+    snapshotFullRefresh @2;
 }
 
 struct MDEntry {
