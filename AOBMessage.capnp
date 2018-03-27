@@ -6,11 +6,12 @@ $Cxx.namespace("proto");
 #######################################################################################################
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    reqID @0 :Text;
-    mdReqGrp @1 :List(MDEntryType);
-    instrmtMDReqGrp @2 :List(Instrument);
-    marketDepth @3 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregatedBook @4 :AggregatedBook;
+    header @0 :StandardHeader;
+    reqID @1 :Text;
+    mdReqGrp @2 :List(MDEntryType);
+    instrmtMDReqGrp @3 :List(Instrument);
+    marketDepth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    aggregatedBook @5 :AggregatedBook;
 }
 
 #######################################################################################################
@@ -19,8 +20,10 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    reqID @0 :Text;
-    incGroup @1 :MDIncGrp;
+    header @0 :StandardHeader;
+    reqID @1 :Text;
+    incGroup @2 :MDIncGrp;
+    marketID @3 :Exchange;
     struct MDIncGrp {
         updateAction @0 :MDUpdateAction;
         instrument @1 :Instrument;
@@ -29,9 +32,11 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 }
 
 struct MarketDataSnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
-    reqID @0 :Text;
-    instrument @1 :Instrument;
-    fullGroup @2 :MDFullGrp;
+    header @0 :StandardHeader;
+    reqID @1 :Text;
+    instrument @2 :Instrument;
+    fullGroup @3 :MDFullGrp;
+    marketID @4 :Exchange;
     struct MDFullGrp {
         entries @0 :List(MDEntry);
     }
@@ -40,6 +45,13 @@ struct MarketDataSnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSn
 #######################################################################################################
 #                   COMMON TYPES
 #######################################################################################################
+
+struct StandardHeader { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
+    msgType @0 :Text;
+    senderCompID @1 :Text;
+    targetCompID @2 :Text;
+    sendingTime @3 :Timestamp;
+}
 
 struct MDEntry {
     type @0 :MDEntryType;
@@ -77,6 +89,10 @@ struct Instrument { # http://fixwiki.org/fixwiki/Instrument/FIX.5.0SP2%2B
     symbol @0 :Text;
 }
 
+struct Exchange { # http://fixwiki.org/fixwiki/ExchangeDataType
+    code @0 :Text;
+}
+
 struct Date {
     year @0 :Int16;
     month @1 :UInt8;
@@ -88,4 +104,9 @@ struct Time {
     minute @1 :UInt8;
     second @2 :UInt8;
     millisecond @3 :UInt16;
+}
+
+struct Timestamp {
+    date @0 :Date;
+    time @1 :Time;
 }
