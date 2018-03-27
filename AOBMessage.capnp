@@ -2,8 +2,25 @@ using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("proto");
 
 #######################################################################################################
+#                   MESSAGE
+#######################################################################################################
+
+struct AOBMessage {
+    type :union {
+        request @0 :Request;
+        response @1 :Response;
+    }
+}
+
+#######################################################################################################
 #                   REQUEST
 #######################################################################################################
+
+struct Request {
+    body :union {
+        marketDataRequest @0 :MarketDataRequest;
+    }
+}
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
     header @0 :StandardHeader;
@@ -18,6 +35,12 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #                   RESPONSE
 #######################################################################################################
 
+struct Response {
+    body :union {
+        MarketDataIncrementalRefresh @0 :MarketDataIncrementalRefresh;
+        MarketDataSnapshotFullRefresh @1 :MarketDataSnapshotFullRefresh;
+    }
+}
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     header @0 :StandardHeader;
