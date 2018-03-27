@@ -24,11 +24,11 @@ struct Request {
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
     header @0 :StandardHeader;
-    reqID @1 :Text;
-    mdReqGrp @2 :List(MDEntryType);
-    instrmtMDReqGrp @3 :List(Instrument);
-    marketDepth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregatedBook @5 :AggregatedBook;
+    request @1 :Text;
+    entryTypes @2 :List(EntryType);
+    instruments @3 :List(Instrument);
+    depth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    aggregated @5 :AggregatedBook;
 }
 
 #######################################################################################################
@@ -37,29 +37,29 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 
 struct Response {
     body :union {
-        marketDataIncrementalRefresh @0 :MarketDataIncrementalRefresh;
-        marketDataSnapshotFullRefresh @1 :MarketDataSnapshotFullRefresh;
+        incrementalRefresh @0 :IncrementalRefresh;
+        snapshotFullRefresh @1 :SnapshotFullRefresh;
     }
 }
 
-struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    header @0 :StandardHeader;
-    reqID @1 :Text;
-    incGroup @2 :MDIncGrp;
-    marketID @3 :Exchange;
+struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
+    header @0 :Header;
+    request @1 :Text;
+    group @2 :MDIncGrp;
+    market @3 :Exchange;
     struct MDIncGrp {
-        updateAction @0 :MDUpdateAction;
+        updateAction @0 :UpdateAction;
         instrument @1 :Instrument;
         entries @2 :List(MDEntry);
     }
 }
 
-struct MarketDataSnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
-    header @0 :StandardHeader;
-    reqID @1 :Text;
+struct SnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
+    header @0 :Header;
+    request @1 :Text;
     instrument @2 :Instrument;
-    fullGroup @3 :MDFullGrp;
-    marketID @4 :Exchange;
+    group @3 :MDFullGrp;
+    market @4 :Exchange;
     struct MDFullGrp {
         entries @0 :List(MDEntry);
     }
@@ -69,7 +69,7 @@ struct MarketDataSnapshotFullRefresh { # http://fixwiki.org/fixwiki/MarketDataSn
 #                   COMMON TYPES
 #######################################################################################################
 
-struct StandardHeader { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
+struct Header { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
     msgType @0 :MsgType;
     senderCompID @1 :Text;
     targetCompID @2 :Text;
@@ -84,16 +84,16 @@ enum MsgType { # http://fixwiki.org/fixwiki/MsgType
 }
 
 struct MDEntry {
-    type @0 :MDEntryType;
-    px @1 :Float64;
+    type @0 :EntryType;
+    price @1 :Float64;
     size @2 :Float64;
     date @3 :Date;
     time @4 :Time;
-    positionNo @5 :UInt8;
-    mkt @6 :Exchange;
+    position @5 :UInt8;
+    market @6 :Exchange;
 }
 
-enum MDEntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
+enum EntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
     bid @0;
     offer @1;
     trade @2;
@@ -105,7 +105,7 @@ enum MDEntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
     tradingSessionLowPrice @8;
 }
 
-enum MDUpdateAction { # http://fixwiki.org/fixwiki/MDUpdateAction
+enum UpdateAction { # http://fixwiki.org/fixwiki/MDUpdateAction
     new @0;
     change @1;
     delete @2;
