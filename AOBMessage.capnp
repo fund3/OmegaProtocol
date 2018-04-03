@@ -17,13 +17,7 @@ struct AOBMessage {
 #                   REQUEST
 #######################################################################################################
 
-struct Request {
-    body :union {
-        marketDataRequest @0 :MarketDataRequest;
-    }
-}
-
-struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
+struct Request { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
     header @0 :Header;
     request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @2 :List(EntryType);
