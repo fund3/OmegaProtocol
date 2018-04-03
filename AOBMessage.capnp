@@ -23,7 +23,7 @@ struct AOBMessage {
 #######################################################################################################
 
 struct Request { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+    identifier @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @1 :List(EntryType);
     instruments @2 :List(Instrument);
     markets @3 :List(Exchange); # http://fixwiki.org/fixwiki/MarketSegmentScopeGrp/FIX.5.0SP2%2B
