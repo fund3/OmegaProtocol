@@ -7,9 +7,15 @@ $Cxx.namespace("proto");
 #######################################################################################################
 
 struct AOBMessage {
+    # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
+    msgType @0 :MsgType;
+    senderCompID @1 :Text;
+    targetCompID @2 :Text;
+    sendingTime @3 :Timestamp;
+    msgSeqNum @4 :UInt16;
     type :union {
-        request @0 :Request;
-        response @1 :Response;
+        request @5 :Request;
+        response @6 :Response;
     }
 }
 
@@ -64,14 +70,6 @@ struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/
 #######################################################################################################
 #                   COMMON TYPES
 #######################################################################################################
-
-struct Header { # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
-    msgType @0 :MsgType;
-    senderCompID @1 :Text;
-    targetCompID @2 :Text;
-    sendingTime @3 :Timestamp;
-    msgSeqNum @4 :UInt16;
-}
 
 enum MsgType { # http://fixwiki.org/fixwiki/MsgType
     request @0;
