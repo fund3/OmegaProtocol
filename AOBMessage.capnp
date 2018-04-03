@@ -26,9 +26,8 @@ struct Request { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2
     identifier @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @1 :List(EntryType);
     instruments @2 :List(Instrument);
-    markets @3 :List(Exchange); # http://fixwiki.org/fixwiki/MarketSegmentScopeGrp/FIX.5.0SP2%2B
-    depth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregated @5 :AggregatedBook;
+    depth @3 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    aggregated @4 :AggregatedBook;
 }
 
 #######################################################################################################
@@ -44,21 +43,19 @@ struct Response {
 
 struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    market @1 :Exchange; # http://fixwiki.org/fixwiki/MarketID
     group :group { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
-        updateAction @2 :UpdateAction;
-        instrument @3 :Instrument;
-        entries @4 :List(Entry);
+        updateAction @1 :UpdateAction;
+        instrument @2 :Instrument;
+        entries @3 :List(Entry);
     }
 }
 
 struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
     request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
     instrument @1 :Instrument;
-    market @2 :Exchange; # http://fixwiki.org/fixwiki/MarketID
     group :group { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
-        entries @3 :List(Entry);
-        currency @4 :Text;
+        entries @2 :List(Entry);
+        currency @3 :Text;
     }
 }
 
@@ -73,7 +70,6 @@ struct Entry {
     date @3 :Date;
     time @4 :Time;
     position @5 :UInt8; # http://fixwiki.org/fixwiki/MDEntryPositionNo
-    market @6 :Exchange; # http://fixwiki.org/fixwiki/MDMkt
 }
 
 enum EntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
@@ -101,10 +97,7 @@ enum AggregatedBook { # http://www.fixwiki.org/fixwiki/AggregatedBook
 
 struct Instrument { # http://fixwiki.org/fixwiki/Instrument/FIX.5.0SP2%2B
     symbol @0 :Text;
-}
-
-struct Exchange { # http://fixwiki.org/fixwiki/ExchangeDataType
-    code @0 :Text;
+    exchange @1 :Text;
 }
 
 struct Date {
