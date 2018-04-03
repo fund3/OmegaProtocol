@@ -55,7 +55,6 @@ struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/
     instrument @1 :Instrument;
     group :group { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
         entries @2 :List(Entry);
-        currency @3 :Text;
     }
 }
 
@@ -97,7 +96,8 @@ enum AggregatedBook { # http://www.fixwiki.org/fixwiki/AggregatedBook
 
 struct Instrument { # http://fixwiki.org/fixwiki/Instrument/FIX.5.0SP2%2B
     symbol @0 :Text;
-    exchange @1 :Text;
+    currency @1 :Text;
+    exchange @2 :Text;
 }
 
 struct Date {
