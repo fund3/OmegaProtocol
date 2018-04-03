@@ -6,15 +6,13 @@ $Cxx.namespace("proto");
 #                   MESSAGE
 #######################################################################################################
 
-struct AOBMessage {
+struct MarketDataMessage {
     # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
-    senderCompany @0 :Text;
-    targetCompany @1 :Text;
-    sendingTime @2 :Timestamp;
-    sequenceNumber @3 :UInt16;
+    sequenceNumber @0 :UInt32;
     type :union {
-        request @4 :Request;
-        response @5 :Response;
+        marketDataRequest @1 :MarketDataRequest;
+        marketDataIncrementalRefresh @2 :MarketDataIncrementalRefresh;
+        marketDataSnapshotRefresh @3 :MarketDataSnapshotRefresh;
     }
 }
 
@@ -22,34 +20,27 @@ struct AOBMessage {
 #                   REQUEST
 #######################################################################################################
 
-struct Request { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    identifier @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
+    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @1 :List(EntryType);
     instruments @2 :List(Instrument);
     depth @3 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregated @4 :AggregatedBook;
+    aggregated @4 :Bool;
 }
 
 #######################################################################################################
 #                   RESPONSE
 #######################################################################################################
 
-struct Response {
-    body :union {
-        incrementalRefresh @0 :IncrementalRefresh;
-        fullRefresh @1 :FullRefresh;
-    }
-}
-
-struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
+    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
     updateAction @1 :UpdateAction;
     instrument @2 :Instrument;
     entries @3 :List(Entry);
 }
 
-struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
-    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+struct MarketDataSnapshotRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
+    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
     instrument @1 :Instrument;
     entries @2 :List(Entry);
 }
@@ -83,11 +74,6 @@ enum UpdateAction { # http://fixwiki.org/fixwiki/MDUpdateAction
     new @0;
     change @1;
     delete @2;
-}
-
-enum AggregatedBook { # http://www.fixwiki.org/fixwiki/AggregatedBook
-    bookEntriesShouldNotBeAggregated @0;
-    bookEntriesToBeAggregated @1;
 }
 
 struct Instrument { # http://fixwiki.org/fixwiki/Instrument/FIX.5.0SP2%2B
