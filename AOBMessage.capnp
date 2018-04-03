@@ -24,13 +24,12 @@ struct AOBMessage {
 #######################################################################################################
 
 struct Request { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    header @0 :Header;
-    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    entryTypes @2 :List(EntryType);
-    instruments @3 :List(Instrument);
-    markets @4 :List(Exchange); # http://fixwiki.org/fixwiki/MarketSegmentScopeGrp/FIX.5.0SP2%2B
-    depth @5 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregated @6 :AggregatedBook;
+    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+    entryTypes @1 :List(EntryType);
+    instruments @2 :List(Instrument);
+    markets @3 :List(Exchange); # http://fixwiki.org/fixwiki/MarketSegmentScopeGrp/FIX.5.0SP2%2B
+    depth @4 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    aggregated @5 :AggregatedBook;
 }
 
 #######################################################################################################
@@ -45,24 +44,22 @@ struct Response {
 }
 
 struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    header @0 :Header;
-    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    market @2 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+    market @1 :Exchange; # http://fixwiki.org/fixwiki/MarketID
     group :group { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
-        updateAction @3 :UpdateAction;
-        instrument @4 :Instrument;
-        entries @5 :List(Entry);
+        updateAction @2 :UpdateAction;
+        instrument @3 :Instrument;
+        entries @4 :List(Entry);
     }
 }
 
 struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
-    header @0 :Header;
-    request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    instrument @2 :Instrument;
-    market @3 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
+    instrument @1 :Instrument;
+    market @2 :Exchange; # http://fixwiki.org/fixwiki/MarketID
     group :group { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
-        entries @4 :List(Entry);
-        currency @5 :Text;
+        entries @3 :List(Entry);
+        currency @4 :Text;
     }
 }
 
