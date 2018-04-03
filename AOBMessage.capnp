@@ -8,11 +8,11 @@ $Cxx.namespace("proto");
 
 struct AOBMessage {
     # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
-    msgType @0 :MsgType;
-    senderCompID @1 :Text;
-    targetCompID @2 :Text;
+    type @0 :MessageType;
+    senderCompany @1 :Text;
+    targetCompany @2 :Text;
     sendingTime @3 :Timestamp;
-    msgSeqNum @4 :UInt16;
+    sequenceNumber @4 :UInt16;
     type :union {
         request @5 :Request;
         response @6 :Response;
@@ -47,12 +47,11 @@ struct Response {
 struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     header @0 :Header;
     request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    group @2 :MDIncGrp;
-    market @3 :Exchange; # http://fixwiki.org/fixwiki/MarketID
-    struct MDIncGrp { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
-        updateAction @0 :UpdateAction;
-        instrument @1 :Instrument;
-        entries @2 :List(Entry);
+    market @2 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    group :group { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
+        updateAction @3 :UpdateAction;
+        instrument @4 :Instrument;
+        entries @5 :List(Entry);
     }
 }
 
@@ -60,10 +59,10 @@ struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/
     header @0 :Header;
     request @1 :Text; # http://fixwiki.org/fixwiki/MDReqID
     instrument @2 :Instrument;
-    group @3 :MDFullGrp;
-    market @4 :Exchange; # http://fixwiki.org/fixwiki/MarketID
-    struct MDFullGrp { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
-        entries @0 :List(Entry);
+    market @3 :Exchange; # http://fixwiki.org/fixwiki/MarketID
+    group :group { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
+        entries @4 :List(Entry);
+        currency @5 :Text;
     }
 }
 
@@ -71,7 +70,7 @@ struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/
 #                   COMMON TYPES
 #######################################################################################################
 
-enum MsgType { # http://fixwiki.org/fixwiki/MsgType
+enum MessageType { # http://fixwiki.org/fixwiki/MsgType
     request @0;
     incrementalRefresh @1;
     fullRefresh @2;
