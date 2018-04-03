@@ -43,19 +43,15 @@ struct Response {
 
 struct IncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
-    group :group { # http://fixwiki.org/fixwiki/MDIncGrp/FIX.5.0SP2%2B
-        updateAction @1 :UpdateAction;
-        instrument @2 :Instrument;
-        entries @3 :List(Entry);
-    }
+    updateAction @1 :UpdateAction;
+    instrument @2 :Instrument;
+    entries @3 :List(Entry);
 }
 
 struct FullRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
     request @0 :Text; # http://fixwiki.org/fixwiki/MDReqID
     instrument @1 :Instrument;
-    group :group { # http://fixwiki.org/fixwiki/MDFullGrp/FIX.5.0SP2%2B
-        entries @2 :List(Entry);
-    }
+    entries @2 :List(Entry);
 }
 
 #######################################################################################################
