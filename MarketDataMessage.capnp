@@ -24,8 +24,15 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
     entryTypes @1 :List(EntryType);
     instruments @2 :List(Instrument);
-    depth @3 :UInt8; # http://www.fixwiki.org/fixwiki/MarketDepth
+    depth @3 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
     aggregated @4 :Bool;
+    subscriptionType @5 :SubscriptionRequestType;
+}
+
+enum SubscriptionRequestType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
+    snapshot @0;
+    snapshotAndUpdates @1; # subscribe
+    disablePreviousSnapshot @2; # unsubscribe
 }
 
 #######################################################################################################
