@@ -7,12 +7,12 @@ $Cxx.namespace("proto");
 #######################################################################################################
 
 struct MarketDataMessage {
-    # http://fixwiki.org/fixwiki/StandardHeader/FIX.5.0SP2%2B
     sequenceNumber @0 :UInt32;
+    requestID @1 :UInt64;
     type :union {
-        marketDataRequest @1 :MarketDataRequest;
-        marketDataIncrementalRefresh @2 :MarketDataIncrementalRefresh;
-        marketDataSnapshotRefresh @3 :MarketDataSnapshotRefresh;
+        marketDataRequest @2 :MarketDataRequest;
+        marketDataSnapshot @3 :MarketDataSnapshot;
+        marketDataIncrementalRefresh @4 :MarketDataIncrementalRefresh;
     }
 }
 
@@ -21,69 +21,65 @@ struct MarketDataMessage {
 #######################################################################################################
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
-    entryTypes @1 :List(EntryType);
-    instruments @2 :List(Instrument);
-    depth @3 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
-    aggregated @4 :Bool;
-    subscriptionType @5 :SubscriptionRequestType;
-}
-
-enum SubscriptionRequestType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
-    snapshot @0;
-    snapshotAndUpdates @1; # subscribe
-    disablePreviousSnapshot @2; # unsubscribe
+    symbols @0 :List(Text);
+    entryTypes @1 :List(MarketDataEntry.Type);
+    depth @2 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
+    subscriptionType @3 :SubscriptionType;
+    enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
+        snapshot @0;
+        snapshotAndUpdates @1; # subscribe
+        disablePreviousSnapshot @2; # unsubscribe
+    }
 }
 
 #######################################################################################################
 #                   RESPONSE
 #######################################################################################################
 
-struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
-    updateAction @1 :UpdateAction;
-    instrument @2 :Instrument;
-    entries @3 :List(Entry);
+struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
+    entriesBySymbols @0 :List(EntriesBySymbol);
+    struct EntriesBySymbol {
+        symbol @0 :Text;
+        entries @1 :List(MarketDataEntry);
+    }
 }
 
-struct MarketDataSnapshotRefresh { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2B
-    requestID @0 :UInt64; # http://fixwiki.org/fixwiki/MDReqID
-    instrument @1 :Instrument;
-    entries @2 :List(Entry);
+struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
+    updatesBySymbols @0 :List(UpdatesBySymbol);
+    struct UpdatesBySymbol {
+        symbol @0 :Text;
+        updates @1 :List(MarketDataUpdate);
+    }
 }
 
 #######################################################################################################
 #                   COMMON TYPES
 #######################################################################################################
 
-struct Entry {
-    type @0 :EntryType;
-    price @1 :Float64;
+struct MarketDataEntry {
+    type @0 :Type;
+    position @1 :UInt8;
     size @2 :Float64;
-    timestamp @3 :UInt64;
-    position @4 :UInt8; # http://fixwiki.org/fixwiki/MDEntryPositionNo
+    price @3 :Float64;
+    enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
+        bid @0;
+        offer @1;
+        trade @2;
+        indexValue @3;
+        openingPrice @4;
+        closingPrice @5;
+        settlementPrice @6;
+        tradingSessionHighPrice @7;
+        tradingSessionLowPrice @8;
+    }
 }
 
-enum EntryType { # http://www.fixwiki.org/fixwiki/MDEntryType
-    bid @0;
-    offer @1;
-    trade @2;
-    indexValue @3;
-    openingPrice @4;
-    closingPrice @5;
-    settlementPrice @6;
-    tradingSessionHighPrice @7;
-    tradingSessionLowPrice @8;
-}
-
-enum UpdateAction { # http://fixwiki.org/fixwiki/MDUpdateAction
-    new @0;
-    change @1;
-    delete @2;
-}
-
-struct Instrument { # http://fixwiki.org/fixwiki/Instrument/FIX.5.0SP2%2B
-    symbol @0 :Text;
-    currency @1 :Text;
-    exchange @2 :Text;
+struct MarketDataUpdate {
+    action @0 :Action;
+    entry @1 :MarketDataEntry;
+    enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
+        new @0;
+        change @1;
+        delete @2;
+    }
 }
