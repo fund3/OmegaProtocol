@@ -1,4 +1,6 @@
 using Cxx = import "/capnp/c++.capnp";
+using import "Exchanges.capnp".Exchange;
+
 $Cxx.namespace("proto");
 @0xb1f6c0f74d970d0c;
 
@@ -26,24 +28,21 @@ enum OrderStatus {
     undefined @0;
     received @1;
     adopted @2;
-    validated @3;
-    rejected @4;
-    sentToExchange @5;
-    working @6;
-    filled @7;
-    partiallyFilled @8;
-    pendingCancel @9;
-    pendingReplace @10;
-    canceled @11;
+    working @3;
+    partiallyFilled @4;
+    filled @5;
+    canceled @6;
+    rejected @7;
 }
 
 
 enum TimeInForce {
-    gtc @0;        # Good till cancel
-    gtt @1;        # Good till time
-    day @2;        # Day order
-    ioc @3;        # Immediate or cancel
-    fok @4;        # Fill or kill
+    undefined @0;
+    gtc @1;        # Good till cancel
+    gtt @2;        # Good till time
+    day @3;        # Day order
+    ioc @4;        # Immediate or cancel
+    fok @5;        # Fill or kill
 }
 
 
@@ -57,7 +56,6 @@ struct TradeMessage {
     type :union {
         request @0 :Request;
         response @1 :Response;
-        internal @2 :Internal; 
     }
 }
 
@@ -77,8 +75,8 @@ struct Request {
         heartbeat @2 :Void;                          # response: heartbeat
 
         # logon-logoff
-        logon @3 :Void;                              # response: logon
-        logoff @4 :Void;                             # response: logoff
+        logon @3 :AnyPointer;                        # response: logonAck
+        logoff @4 :AnyPointer;                       # response: logoffAck
         
         # trading requests
         placeOrder @5 :PlaceOrder;                   # response: ExecutionReport
@@ -102,7 +100,7 @@ struct PlaceOrder {
     orderQuantity @6 :Float64;
     orderPrice @7 :Float64;
     timeInForce @8 :TimeInForce;
-    exchange @9 :Text;
+    exchange @9 :Exchange;
 }
 
 
@@ -111,8 +109,13 @@ struct ReplaceOrder {
     clientOrderID @1 :UInt64;       # empty in client request
     exchangeOrderID @2 :Text;       # empty in client request
     accountID @3 :UInt64;           # empty in client request
-    orderPrice @4 :Float64;         # if 0, change quantity only
-    orderQuantity @5 :Float64;      # if 0, change price only
+    symbol @4 :Text;                # empty in client request
+    orderSide @5 :OrderSide;        # optional
+    orderType @6 :OrderType;        # optional
+    orderQuantity @7 :Float64;      # optional
+    orderPrice @8 :Float64;         # optional
+    timeInForce @9 :TimeInForce;    # optional
+    exchange @10 :Exchange;         # empty in client request
 }
 
 
@@ -125,16 +128,16 @@ struct CancelOrder {
 
 
 struct GetWorkingOrders {
-    orderID @0 :Text;               # if empty, return all working orders for account
+    orderID @0 :Text;               # if empty, return all working orders for the account
     clientOrderID @1 :UInt64;       # empty in client request
     exchangeOrderID @2 :Text;       # empty in client request
-    exchange @3 :Text; 
+    exchange @3 :Exchange; 
     accountID @4 :UInt64;
 }
 
 
 struct GetAccountBalances {
-    exchange @0 :Text;
+    exchange @0 :Exchange;
     accountID @1 :UInt64;
 }
 
@@ -177,7 +180,7 @@ struct ExecutionReport {
     type :union {
         orderAccepted @5 :Void;
         orderRejected @6 :OrderRejected;
-        orderReplaced @7 :OrderReplaced;
+        orderReplaced @7 :Void;
         replaceRejected @8 :OrderRejected;
         orderCanceled @9 :Void;
         cancelRejected @10 :OrderRejected;
@@ -189,12 +192,6 @@ struct ExecutionReport {
 struct OrderFilled{
     filledQuantity @0 :Float64;
     avgFillPrice @1 :Float64;
-}
-
-
-struct OrderReplaced {
-    newOrderPrice @0 :Float64;          # 0 if no changes
-    newOrderQuantity @1 :Float64;       # 0 if no changes
 }
 
 
@@ -215,7 +212,7 @@ struct OrderData {
     orderType @6 :OrderType;
     orderQuantity @7 :Float64;
     orderPrice @8 :Float64;
-    exchange @9 :Text;
+    exchange @9 :Exchange;
     orderStatus @10 :OrderStatus;
     filledQuantity @11 :Float64;
     avgFillPrice @12 :Float64;
@@ -231,7 +228,7 @@ struct Balance {
 
 
 struct AccountBalances {
-    exchange @0 :Text;
+    exchange @0 :Exchange;
     accountID @1 :UInt64;
     balances @2 :List(Balance);
 }
@@ -254,34 +251,8 @@ struct LogoffAck {
 }
 
 
-
-#######################################################################################################
-#                   INTERNAL MESSAGES
-#######################################################################################################
-
-
-struct Internal {
-    body :union {
-        logon @0 :LogonInternal;
-        logoff @1 :LogoffInternal;
-    }
-}
-
-
-struct LogonInternal {
-    clientID @0 :Text;
-    accountCredentials @1 :List(AccountCredentials);
-}
-
-
-struct LogoffInternal {
-    clientID @0 :Text;
-    accountIDs @1 :List(UInt64);
-}
-
-
 struct AccountCredentials {
-	accountID @0 :UInt64;
+    accountID @0 :UInt64;
     apiKey @1 :Text;
     secretKey @2 :Text;
     passphrase @3 :Text;
