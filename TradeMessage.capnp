@@ -176,26 +176,22 @@ struct ExecutionReport {
     exchangeOrderID @2 :Text;
     accountID @3 :UInt64;
     orderStatus @4 :OrderStatus;
+    filledQuantity @5 :Float64;
+    avgFillPrice @6 :Float64;
 
     type :union {
-        orderAccepted @5 :Void;
-        orderRejected @6 :OrderRejected;
-        orderReplaced @7 :Void;
-        replaceRejected @8 :OrderRejected;
-        orderCanceled @9 :Void;
-        cancelRejected @10 :OrderRejected;
-        orderFilled @11 :OrderFilled;
+        orderAccepted @7 :Void;
+        orderRejected @8 :RequestRejected;
+        orderReplaced @9 :Void;
+        replaceRejected @10 :RequestRejected;
+        orderCanceled @11 :Void;
+        cancelRejected @12 :RequestRejected;
+        orderFilled @13 :Void;
     }
 }
 
 
-struct OrderFilled{
-    filledQuantity @0 :Float64;
-    avgFillPrice @1 :Float64;
-}
-
-
-struct OrderRejected {
+struct RequestRejected {
     rejectionReason @0 :Text;
 }
 
@@ -212,10 +208,11 @@ struct OrderData {
     orderType @6 :OrderType;
     orderQuantity @7 :Float64;
     orderPrice @8 :Float64;
-    exchange @9 :Exchange;
-    orderStatus @10 :OrderStatus;
-    filledQuantity @11 :Float64;
-    avgFillPrice @12 :Float64;
+    timeInForce @9 :TimeInForce;
+    exchange @10 :Exchange;
+    orderStatus @11 :OrderStatus;
+    filledQuantity @12 :Float64;
+    avgFillPrice @13 :Float64;
 }
 
 
