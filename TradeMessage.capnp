@@ -91,24 +91,24 @@ struct Request {
 
 
 struct PlaceOrder {
-    clientOrderID @0 :UInt64;
-    orderID @1 :Text;              # empty in client request
-    accountID @2 :UInt64;
-    symbol @3 :Text;
-    orderSide @4 :OrderSide;
-    orderType @5 :OrderType;
-    orderQuantity @6 :Float64;
-    orderPrice @7 :Float64;
-    timeInForce @8 :TimeInForce;
-    exchange @9 :Exchange;
+    accountID @0 :UInt64;               # required
+    clientOrderID @1 :UInt64;           # required
+    orderID @2 :Text;                   # empty in client request
+    symbol @3 :Text;                    # required
+    orderSide @4 :OrderSide;            # required
+    orderType @5 :OrderType = limit;    # optional, default : LIMIT
+    orderQuantity @6 :Float64;          # required
+    orderPrice @7 :Float64;             # required for LIMIT
+    timeInForce @8 :TimeInForce = gtc;  # optional, default : GTC 
+    exchange @9 :Exchange;              # required
 }
 
 
 struct ReplaceOrder {
-    orderID @0 :Text;
-    clientOrderID @1 :UInt64;       # empty in client request
-    exchangeOrderID @2 :Text;       # empty in client request
-    accountID @3 :UInt64;           # empty in client request
+    accountID @0 :UInt64;           # required
+    orderID @1 :Text;               # required
+    clientOrderID @2 :UInt64;       # empty in client request
+    exchangeOrderID @3 :Text;       # empty in client request
     symbol @4 :Text;                # empty in client request
     orderSide @5 :OrderSide;        # optional
     orderType @6 :OrderType;        # optional
@@ -120,25 +120,23 @@ struct ReplaceOrder {
 
 
 struct CancelOrder {
-    orderID @0 :Text;
-    clientOrderID @1 :UInt64;       # empty in client request
-    exchangeOrderID @2 :Text;       # empty in client request
-    accountID @3 :UInt64;           # empty in client request
+    accountID @0 :UInt64;           # required
+    orderID @1 :Text;               # required
+    clientOrderID @2 :UInt64;       # empty in client request
+    exchangeOrderID @3 :Text;       # empty in client request
 }
 
 
 struct GetWorkingOrders {
-    orderID @0 :Text;               # if empty, return all working orders for the account
-    clientOrderID @1 :UInt64;       # empty in client request
-    exchangeOrderID @2 :Text;       # empty in client request
-    exchange @3 :Exchange; 
-    accountID @4 :UInt64;
+    accountID @0 :UInt64;           # required
+    orderID @1 :Text;               # if empty, return all working orders for the account
+    clientOrderID @2 :UInt64;       # empty in client request
+    exchangeOrderID @3 :Text;       # empty in client request
 }
 
 
 struct GetAccountBalances {
-    exchange @0 :Exchange;
-    accountID @1 :UInt64;
+    accountID @0 :UInt64;           # required
 }
 
 
