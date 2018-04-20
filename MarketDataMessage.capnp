@@ -8,11 +8,12 @@ $Cxx.namespace("proto");
 
 struct MarketDataMessage {
     sequenceNumber @0 :UInt32;
-    requestID @1 :UInt64;
+    timestamp @1: UInt64;
+    requestID @2 :UInt64;
     type :union {
-        marketDataRequest @2 :MarketDataRequest;
-        marketDataSnapshot @3 :MarketDataSnapshot;
-        marketDataIncrementalRefresh @4 :MarketDataIncrementalRefresh;
+        marketDataRequest @3 :MarketDataRequest;
+        marketDataSnapshot @4 :MarketDataSnapshot;
+        marketDataIncrementalRefresh @5 :MarketDataIncrementalRefresh;
     }
 }
 
@@ -21,7 +22,11 @@ struct MarketDataMessage {
 #######################################################################################################
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    symbols @0 :List(Text);
+    symbolsByExchange @0 :List(SymbolsByExchange);
+    struct SymbolsByExchange {
+        exchange @0 :Text;
+        Symbols @1 :List(Text);
+    }
     entryTypes @1 :List(MarketDataEntry.Type);
     depth @2 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
     subscriptionType @3 :SubscriptionType;
@@ -37,19 +42,24 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #######################################################################################################
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
-    entriesBySymbols @0 :List(EntriesBySymbol);
-    struct EntriesBySymbol {
+    timestamp @0 :UInt64;
+    entriesBySymbols @1 :List(EntriesBySymbolAndExchange);
+    struct EntriesBySymbolAndExchange {
         symbol @0 :Text;
-        entries @1 :List(MarketDataEntry);
+        exchange @1 :Text;
+        entries @2 :List(MarketDataEntry);
     }
 }
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    updatesBySymbols @0 :List(UpdatesBySymbol);
-    struct UpdatesBySymbol {
+    timestamp @0 :UInt64;
+    updatesBySymbols @1 :List(UpdatesBySymbolAndExchange);
+    struct UpdatesBySymbolAndExchange {
         symbol @0 :Text;
-        updates @1 :List(MarketDataUpdate);
+        exchange @1 :Text;
+        updates @2 :List(MarketDataUpdate);
     }
+
 }
 
 #######################################################################################################
@@ -57,10 +67,11 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 #######################################################################################################
 
 struct MarketDataEntry {
-    type @0 :Type;
-    position @1 :UInt8;
-    size @2 :Float64;
-    price @3 :Float64;
+    timestamp @0 :UInt64;
+    type @1 :Type;
+    position @2 :UInt8;
+    size @3 :Float64;
+    price @4 :Float64;
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         bid @0;
         offer @1;
@@ -75,8 +86,9 @@ struct MarketDataEntry {
 }
 
 struct MarketDataUpdate {
-    action @0 :Action;
-    entry @1 :MarketDataEntry;
+    timestamp @0 :UInt64;
+    action @1 :Action;
+    entry @2 :MarketDataEntry;
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
         new @0;
         change @1;
