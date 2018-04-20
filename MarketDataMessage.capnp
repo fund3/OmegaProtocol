@@ -59,7 +59,6 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
         exchange @1 :Text;
         updates @2 :List(MarketDataUpdate);
     }
-
 }
 
 #######################################################################################################
@@ -67,7 +66,7 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 #######################################################################################################
 
 struct MarketDataEntry {
-    timestamp @0 :UInt64;
+    eventTimestamp @0 :UInt64;
     type @1 :Type;
     position @2 :UInt8;
     size @3 :Float64;
@@ -86,7 +85,7 @@ struct MarketDataEntry {
 }
 
 struct MarketDataUpdate {
-    timestamp @0 :UInt64;
+    eventTimestamp @0 :UInt64;
     action @1 :Action;
     entry @2 :MarketDataEntry;
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
