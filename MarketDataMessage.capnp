@@ -8,7 +8,7 @@ $Cxx.namespace("proto");
 
 struct MarketDataMessage {
     sequenceNumber @0 :UInt32;
-    timestamp @1: UInt64;
+    timestamp @1 :UInt64;
     requestID @2 :UInt64;
     type :union {
         marketDataRequest @3 :MarketDataRequest;
@@ -73,7 +73,7 @@ struct MarketDataEntry {
     price @4 :Float64;
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         bid @0;
-        offer @1;
+        offer @1; # A.k.a. ask
         trade @2;
         indexValue @3;
         openingPrice @4;
