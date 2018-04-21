@@ -68,9 +68,12 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 struct MarketDataEntry {
     eventTimestamp @0 :UInt64;
     type @1 :Type;
-    position @2 :UInt8;
+    price @2 :Float64;
     size @3 :Float64;
-    price @4 :Float64;
+    union {
+        position @4 :UInt8;
+        side @5 :Text;
+    }
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         bid @0;
         offer @1;
