@@ -161,7 +161,7 @@ struct Response {
         executionReport @6 :ExecutionReport;
 
         #accounting
-        workingOrders @7 :List(OrderData);
+        workingOrders @7 :WorkingOrders;
         accountBalances @8 :AccountBalances;
     }
 }
@@ -211,6 +211,13 @@ struct OrderData {
     orderStatus @11 :OrderStatus;
     filledQuantity @12 :Float64;
     avgFillPrice @13 :Float64;
+}
+
+
+struct WorkingOrders{
+    exchange @0 :Exchange;
+    accountID @1 :UInt64;
+    orderList @2 :List(OrderData);
 }
 
 
