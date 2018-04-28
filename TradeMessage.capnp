@@ -31,8 +31,11 @@ enum OrderStatus {
     working @3;
     partiallyFilled @4;
     filled @5;
-    canceled @6;
-    rejected @7;
+    pendingReplace @6;
+    replaced @7;
+    pendingCancel @8;
+    canceled @9;
+    rejected @10;
 }
 
 
@@ -175,18 +178,22 @@ struct ExecutionReport {
     accountID @3 :UInt64;
     exchange @4 :Exchange;
     orderStatus @5 :OrderStatus;
-    filledQuantity @6 :Float64;
-    avgFillPrice @7 :Float64;
 
     type :union {
-        orderAccepted @8 :Void;
-        orderRejected @9 :RequestRejected;
-        orderReplaced @10 :Void;
-        replaceRejected @11 :RequestRejected;
-        orderCanceled @12 :Void;
-        cancelRejected @13 :RequestRejected;
-        orderFilled @14 :Void;
+        orderAccepted @6 :Void;
+        orderRejected @7 :RequestRejected;
+        orderReplaced @8 :Void;
+        replaceRejected @9 :RequestRejected;
+        orderCanceled @10 :Void;
+        cancelRejected @11 :RequestRejected;
+        orderFilled @12 :OrderFilled;
     }
+}
+
+
+struct OrderFilled {
+    filledQuantity @0 :Float64;
+    avgFillPrice @1 :Float64;
 }
 
 
@@ -238,7 +245,9 @@ struct AccountBalances {
 
 
 struct SystemMessage {
-    message @0 :Text;
+    exchange @0 :Exchange;
+    accountID @1 :UInt64;
+    message @2 :Text;
 }
 
 

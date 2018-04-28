@@ -15,4 +15,7 @@ enum Exchange {
     gdax @2;
     kraken @3;
     gemini @4;
+    bitfinex @5;
+    bittrex @6;
+    bitmex @7;
 }
