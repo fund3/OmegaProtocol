@@ -25,7 +25,7 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     symbolsByExchange @0 :List(SymbolsByExchange);
     struct SymbolsByExchange {
         exchange @0 :Text;
-        Symbols @1 :List(Text);
+        symbols @1 :List(Text);
     }
     entryTypes @1 :List(MarketDataEntry.Type);
     depth @2 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
