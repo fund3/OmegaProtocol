@@ -7,7 +7,7 @@ $Cxx.namespace("proto");
 #######################################################################################################
 
 struct MarketDataMessage {
-    sequenceNumber @0 :UInt32;
+    sequenceNumber @0 :UInt64;
     timestamp @1: UInt64;
     requestID @2 :UInt64;
     type :union {
@@ -66,7 +66,7 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 #######################################################################################################
 
 struct MarketDataEntry {
-    eventTimestamp @0 :UInt64;
+    eventTimestamp @0 :Float64;
     type @1 :Type;
     price @2 :Float64;
     size @3 :Float64;
@@ -88,7 +88,7 @@ struct MarketDataEntry {
 }
 
 struct MarketDataUpdate {
-    eventTimestamp @0 :UInt64;
+    eventTimestamp @0 :Float64;
     action @1 :Action;
     entry @2 :MarketDataEntry;
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
