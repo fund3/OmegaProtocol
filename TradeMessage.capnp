@@ -172,9 +172,9 @@ struct Response {
 
 # sends as respond to place, modify, cancel requests
 struct ExecutionReport {
-    orderID @0 :Text;
+    orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
-    exchangeOrderID @2 :Text;
+    exchangeOrderID @2 :Text = "<UNDEFINED>";
     accountID @3 :UInt64;
     exchange @4 :Exchange;
     orderStatus @5 :OrderStatus;
@@ -194,18 +194,18 @@ struct ExecutionReport {
 
 
 struct RequestRejected {
-    rejectionReason @0 :Text;
+    rejectionReason @0 :Text = "<NONE>";
 }
 
 
 
 ### OrderData ###
 struct OrderData {
-    orderID @0 :Text;
+    orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
-    exchangeOrderID @2 :Text;
+    exchangeOrderID @2 :Text = "<UNDEFINED>";
     accountID @3 :UInt64;
-    symbol @4 :Text;
+    symbol @4 :Text = "<UNDEFINED>";
     orderSide @5 :OrderSide;
     orderType @6 :OrderType;
     orderQuantity @7 :Float64;
@@ -228,7 +228,7 @@ struct WorkingOrders{
 ### Balances ###
 
 struct Balance {
-    currency @0 :Text;
+    currency @0 :Text = "<UNDEFINED>";
     balance @1 :Float64;   
 }
 
@@ -243,27 +243,27 @@ struct AccountBalances {
 struct SystemMessage {
     exchange @0 :Exchange;
     accountID @1 :UInt64;
-    message @2 :Text;
+    message @2 :Text = "<NONE>";
 }
 
 
 struct LogonAck {
     success @0 :Bool;
-    message @1 :Text;
+    message @1 :Text = "<NONE>";
 }
 
 
 struct LogoffAck {
     success @0 :Bool;
-    message @1 :Text;
+    message @1 :Text = "<NONE>";
 }
 
 
 struct AccountCredentials {
     accountID @0 :UInt64;
-    apiKey @1 :Text;
-    secretKey @2 :Text;
-    passphrase @3 :Text;
+    apiKey @1 :Text = "<NONE>";
+    secretKey @2 :Text = "<NONE>";
+    passphrase @3 :Text = "<NONE>";
 }
 
 
