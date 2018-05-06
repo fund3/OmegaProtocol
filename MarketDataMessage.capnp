@@ -7,8 +7,8 @@ $Cxx.namespace("proto");
 #######################################################################################################
 
 struct MarketDataMessage {
-    sequenceNumber @0 :UInt32;
-    timestamp @1 :UInt64;
+    sequenceNumber @0 :UInt64;
+    timestamp @1: Float64;
     requestID @2 :UInt64;
     type :union {
         marketDataRequest @3 :MarketDataRequest;
@@ -42,7 +42,7 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #######################################################################################################
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
-    timestamp @0 :UInt64;
+    timestamp @0 :Float64;
     entriesBySymbols @1 :List(EntriesBySymbolAndExchange);
     struct EntriesBySymbolAndExchange {
         symbol @0 :Text;
