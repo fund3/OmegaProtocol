@@ -17,5 +17,5 @@ enum Exchange {
     gemini @4;
     bitfinex @5;
     bittrex @6;
-    bitmex @7;
+    binance @7;
 }
