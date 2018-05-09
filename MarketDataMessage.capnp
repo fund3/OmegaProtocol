@@ -43,7 +43,7 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
     timestamp @0 :Float64;
-    entriesBySymbols @1 :List(EntriesBySymbolAndExchange);
+    entriesBySymbolAndExchange @1 :List(EntriesBySymbolAndExchange);
     struct EntriesBySymbolAndExchange {
         symbol @0 :Text;
         exchange @1 :Text;
@@ -53,7 +53,7 @@ struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullR
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
     timestamp @0 :Float64;
-    updatesBySymbols @1 :List(UpdatesBySymbolAndExchange);
+    updatesBySymbolAndExchange @1 :List(UpdatesBySymbolAndExchange);
     struct UpdatesBySymbolAndExchange {
         symbol @0 :Text;
         exchange @1 :Text;
