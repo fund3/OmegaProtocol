@@ -127,6 +127,7 @@ struct CancelOrder {
     orderID @1 :Text;               # required
     clientOrderID @2 :UInt64;       # empty in client request
     exchangeOrderID @3 :Text;       # empty in client request
+    symbol @4 :Text;                # empty in client request
 }
 
 
