@@ -8,7 +8,7 @@ $Cxx.namespace("proto");
 
 struct MarketDataMessage {
     sequenceNumber @0 :UInt64;
-    timestamp @1: UInt64;
+    timestamp @1 :Float64;
     requestID @2 :UInt64;
     type :union {
         marketDataRequest @3 :MarketDataRequest;
@@ -42,8 +42,8 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #######################################################################################################
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
-    timestamp @0 :UInt64;
-    entriesBySymbols @1 :List(EntriesBySymbolAndExchange);
+    timestamp @0 :Float64;
+    entriesBySymbolAndExchange @1 :List(EntriesBySymbolAndExchange);
     struct EntriesBySymbolAndExchange {
         symbol @0 :Text;
         exchange @1 :Text;
@@ -52,8 +52,8 @@ struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullR
 }
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    timestamp @0 :UInt64;
-    updatesBySymbols @1 :List(UpdatesBySymbolAndExchange);
+    timestamp @0 :Float64;
+    updatesBySymbolAndExchange @1 :List(UpdatesBySymbolAndExchange);
     struct UpdatesBySymbolAndExchange {
         symbol @0 :Text;
         exchange @1 :Text;
@@ -76,7 +76,7 @@ struct MarketDataEntry {
     }
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         bid @0;
-        offer @1;
+        offer @1; # A.k.a. ask
         trade @2;
         indexValue @3;
         openingPrice @4;
