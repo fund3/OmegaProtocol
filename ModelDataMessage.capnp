@@ -3,10 +3,8 @@ using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("proto");
 @0xa9a26f2e477dc8ed;
 
-
-
 struct ModelDataMessage {
-    timestamp @0 :UInt64;               # POSIX Time
+    timestamp @0 :Float64;               # POSIX Time
 
     parameters @1 :List(Text);          # optional, similar to python *args
     payloadQuantity :union{
@@ -23,22 +21,16 @@ struct ModelDataMessage {
     }
 }
 
-
-
 struct Request{ 
     modelID @0 :Text;
     repsonseType @1 :ResponseType;
 }
-
-
 
 struct Response{
     repsonseType @0 :ResponseType;
     columns @1 :List(Text);
     body @2 :Data;                        # binary dataframe in Feather format
 }
-
-
 
 enum ResponseType{
     snapshot @0;
