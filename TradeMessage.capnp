@@ -88,6 +88,7 @@ struct Request {
 
         # account-related request
         getWorkingOrders @8 :GetWorkingOrders;       # response: OrderList
+        getOrderStatus @10 :GetOrderStatus;          # response: ExecutionReport - not implemented
         getAccountBalances @9 :GetAccountBalances;   # response: AccountBalances
     }
 }
@@ -133,7 +134,15 @@ struct CancelOrder {
 
 struct GetWorkingOrders {
     accountID @0 :UInt64;           # required
-    orderID @1 :Text;               # if empty, return all working orders for the account
+    orderID @1 :Text;               # will be deprecated
+    clientOrderID @2 :UInt64;       # will be deprecated
+    exchangeOrderID @3 :Text;       # will be deprecated
+}
+
+
+struct GetOrderStatus {
+    accountID @0 :UInt64;           # required
+    orderID @1 :Text;               # required
     clientOrderID @2 :UInt64;       # empty in client request
     exchangeOrderID @3 :Text;       # empty in client request
 }
