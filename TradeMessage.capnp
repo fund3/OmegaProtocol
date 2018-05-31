@@ -36,6 +36,7 @@ enum OrderStatus {
     pendingCancel @8;
     canceled @9;
     rejected @10;
+    expired @11;
 }
 
 
@@ -75,82 +76,111 @@ struct Request {
 
     body :union {
         # system
-        heartbeat @2 :Void;                          # response: heartbeat
+        heartbeat @2 :Void;                          # response: Heartbeat
+        test @3 :TestMessage;                        # response: TestMessage
 
         # logon-logoff
-        logon @3 :AnyPointer;                        # response: logonAck
-        logoff @4 :AnyPointer;                       # response: logoffAck
+        logon @4 :Logon;                             # response: LogonAck
+        logoff @5 :Logoff;                           # response: LogoffAck
         
         # trading requests
-        placeOrder @5 :PlaceOrder;                   # response: ExecutionReport
-        replaceOrder @6 :ReplaceOrder;               # response: ExecutionReport
-        cancelOrder @7 :CancelOrder;                 # response: ExecutionReport
+        placeOrder @6 :PlaceOrder;                   # response: ExecutionReport
+        replaceOrder @7 :ReplaceOrder;               # response: ExecutionReport
+        cancelOrder @8 :CancelOrder;                 # response: ExecutionReport
+        getOrderStatus @9 :GetOrderStatus;           # response: ExecutionReport
 
         # account-related request
-        getWorkingOrders @8 :GetWorkingOrders;       # response: OrderList
-        getOrderStatus @10 :GetOrderStatus;          # response: ExecutionReport - not implemented
-        getAccountBalances @9 :GetAccountBalances;   # response: AccountBalances
+        getAccountData @10 :GetAccountData;          # response: AccountDataReport
+        getWorkingOrders @11 :GetWorkingOrders;      # response: WorkingOrdersReport
+        getAccountBalances @12 :GetAccountBalances;  # response: AccountBalancesReport
     }
 }
 
 
+struct Logon {
+    credentials @0 :List(AccountCredentials);        # should not be set in client request, for internal usage only
+}
+
+
+struct Logoff {
+    clientAccounts @0 :List(UInt64);                 # should not be set in client request, for internal usage only
+}
+
+
 struct PlaceOrder {
-    accountID @0 :UInt64;               # required
-    clientOrderID @1 :UInt64;           # required
-    orderID @2 :Text;                   # empty in client request
-    symbol @3 :Text;                    # required
-    orderSide @4 :OrderSide;            # required
-    orderType @5 :OrderType = limit;    # optional, default : LIMIT
-    orderQuantity @6 :Float64;          # required
-    orderPrice @7 :Float64;             # required for LIMIT
-    timeInForce @8 :TimeInForce = gtc;  # optional, default : GTC 
-    exchange @9 :Exchange;              # required
+    accountID @0 :UInt64;                            # required
+    clientOrderID @1 :UInt64;                        # required
+    orderID @2 :Text;                                # empty in client request
+    symbol @3 :Text;                                 # required
+    orderSide @4 :OrderSide;                         # required
+    orderType @5 :OrderType = limit;                 # optional, default : LIMIT
+    orderQuantity @6 :Float64;                       # required
+    orderPrice @7 :Float64;                          # required for LIMIT
+    timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
 }
 
 
 struct ReplaceOrder {
-    accountID @0 :UInt64;           # required
-    orderID @1 :Text;               # required
-    clientOrderID @2 :UInt64;       # empty in client request
-    exchangeOrderID @3 :Text;       # empty in client request
-    symbol @4 :Text;                # empty in client request
-    orderSide @5 :OrderSide;        # optional
-    orderType @6 :OrderType;        # optional
-    orderQuantity @7 :Float64;      # optional
-    orderPrice @8 :Float64;         # optional
-    timeInForce @9 :TimeInForce;    # optional
-    exchange @10 :Exchange;         # empty in client request
+    accountID @0 :UInt64;                            # required
+    orderID @1 :Text;                                # required
+    clientOrderID @2 :UInt64;                        # empty in client request
+    exchangeOrderID @3 :Text;                        # empty in client request
+    symbol @4 :Text;                                 # empty in client request
+    orderSide @5 :OrderSide;                         # optional
+    orderType @6 :OrderType;                         # optional
+    orderQuantity @7 :Float64;                       # optional
+    orderPrice @8 :Float64;                          # optional
+    timeInForce @9 :TimeInForce;                     # optional
 }
 
 
 struct CancelOrder {
-    accountID @0 :UInt64;           # required
-    orderID @1 :Text;               # required
-    clientOrderID @2 :UInt64;       # empty in client request
-    exchangeOrderID @3 :Text;       # empty in client request
-    symbol @4 :Text;                # empty in client request
-}
-
-
-struct GetWorkingOrders {
-    accountID @0 :UInt64;           # required
-    orderID @1 :Text;               # will be deprecated
-    clientOrderID @2 :UInt64;       # will be deprecated
-    exchangeOrderID @3 :Text;       # will be deprecated
+    accountID @0 :UInt64;                            # required
+    orderID @1 :Text;                                # required
+    clientOrderID @2 :UInt64;                        # empty in client request
+    exchangeOrderID @3 :Text;                        # empty in client request
+    symbol @4 :Text;                                 # empty in client request
 }
 
 
 struct GetOrderStatus {
-    accountID @0 :UInt64;           # required
-    orderID @1 :Text;               # required
-    clientOrderID @2 :UInt64;       # empty in client request
-    exchangeOrderID @3 :Text;       # empty in client request
+    accountID @0 :UInt64;                            # required
+    orderID @1 :Text;                                # required
+    clientOrderID @2 :UInt64;                        # empty in client request
+    exchangeOrderID @3 :Text;                        # empty in client request
+}
+
+
+# return full account snapshot including balances and working orders in one transaction
+struct GetAccountData {
+    accountID @0 :UInt64;                            # required
+}
+
+
+struct GetWorkingOrders {
+    accountID @0 :UInt64;                            # required
 }
 
 
 struct GetAccountBalances {
-    accountID @0 :UInt64;           # required
+    accountID @0 :UInt64;                            # required
 }
+
+
+
+
+struct AccountCredentials {
+    accountID @0 :UInt64;
+    apiKey @1 :Text = "<NONE>";
+    secretKey @2 :Text = "<NONE>";
+    passphrase @3 :Text = "<NONE>";
+}
+
+
+struct TestMessage {
+    string @0 :Text;
+}
+
 
 
 #######################################################################################################
@@ -164,23 +194,25 @@ struct Response {
     body :union {
         # system
         heartbeat @2 :Void;
-        system @3 : SystemMessage;
+        test @3 :TestMessage;
+        system @4 : SystemMessage;
 
         # logon-logoff
-        logonAck @4 :LogonAck;
-        logoffAck @5 :LogoffAck;
+        logonAck @5 :LogonAck;
+        logoffAck @6 :LogoffAck;
 
         # trading
-        executionReport @6 :ExecutionReport;
+        executionReport @7 :ExecutionReport;
 
         #accounting
-        workingOrders @7 :WorkingOrders;
-        accountBalances @8 :AccountBalances;
+        accountDataReport @8 :AccountDataReport;
+        workingOrdersReport @9 :WorkingOrdersReport;
+        accountBalancesReport @10 :AccountBalancesReport;
     }
 }
 
 
-# sends as respond to place, modify, cancel requests
+# sends as respond to place, modify, cancel, getOrderStatus requests
 struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
@@ -199,67 +231,38 @@ struct ExecutionReport {
         orderCanceled @12 :Void;
         cancelRejected @13 :RequestRejected;
         orderFilled @14 :Void;
+        statusRequested @15 :Void;
     }
 }
 
 
-struct RequestRejected {
-    rejectionReason @0 :Text = "<NONE>";
+struct AccountDataReport {
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
+    balances @2 :List(Balance);
+    orderList @3 :List(OrderData);
+    ready @4 :Bool;
 }
 
 
-
-### OrderData ###
-struct OrderData {
-    orderID @0 :Text = "<UNDEFINED>";
-    clientOrderID @1 :UInt64;
-    exchangeOrderID @2 :Text = "<UNDEFINED>";
-    accountID @3 :UInt64;
-    symbol @4 :Text = "<UNDEFINED>";
-    orderSide @5 :OrderSide;
-    orderType @6 :OrderType;
-    orderQuantity @7 :Float64;
-    orderPrice @8 :Float64;
-    timeInForce @9 :TimeInForce;
-    exchange @10 :Exchange;
-    orderStatus @11 :OrderStatus;
-    filledQuantity @12 :Float64;
-    avgFillPrice @13 :Float64;
-}
-
-
-struct WorkingOrders{
-    exchange @0 :Exchange;
-    accountID @1 :UInt64;
+struct WorkingOrdersReport{
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
     orderList @2 :List(OrderData);
 }
 
 
-### Balances ###
-
-struct Balance {
-    currency @0 :Text = "<UNDEFINED>";
-    balance @1 :Float64;   
-}
-
-
-struct AccountBalances {
-    exchange @0 :Exchange;
-    accountID @1 :UInt64;
+struct AccountBalancesReport {
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
     balances @2 :List(Balance);
-}
-
-
-struct SystemMessage {
-    exchange @0 :Exchange;
-    accountID @1 :UInt64;
-    message @2 :Text = "<NONE>";
 }
 
 
 struct LogonAck {
     success @0 :Bool;
     message @1 :Text = "<NONE>";
+    clientAccounts @2 :List(UInt64);
 }
 
 
@@ -269,11 +272,38 @@ struct LogoffAck {
 }
 
 
-struct AccountCredentials {
+struct SystemMessage {
     accountID @0 :UInt64;
-    apiKey @1 :Text = "<NONE>";
-    secretKey @2 :Text = "<NONE>";
-    passphrase @3 :Text = "<NONE>";
+    exchange @1 :Exchange;
+    message @2 :Text = "<NONE>";
+}
+
+
+struct RequestRejected {
+    rejectionReason @0 :Text = "<NONE>";
+}
+
+
+struct OrderData {
+    orderID @0 :Text = "<UNDEFINED>";
+    clientOrderID @1 :UInt64;
+    exchangeOrderID @2 :Text = "<UNDEFINED>";
+    symbol @3 :Text = "<UNDEFINED>";
+    orderSide @4 :OrderSide;
+    orderType @5 :OrderType;
+    orderQuantity @6 :Float64;
+    orderPrice @7 :Float64;
+    timeInForce @8 :TimeInForce;
+    orderStatus @9 :OrderStatus;
+    filledQuantity @10 :Float64;
+    avgFillPrice @11 :Float64;
+}
+
+
+struct Balance {
+    currency @0 :Text = "<UNDEFINED>";
+    fullBalance @1 :Float64;
+    availableBalance @2 :Float64;   
 }
 
 
