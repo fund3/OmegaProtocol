@@ -231,7 +231,7 @@ struct ExecutionReport {
         orderCanceled @12 :Void;
         cancelRejected @13 :RequestRejected;
         orderFilled @14 :Void;
-        statusRequested @15 :Void;
+        statusUpdate @15 :Void;
     }
 }
 
