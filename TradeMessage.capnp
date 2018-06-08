@@ -148,6 +148,7 @@ struct GetOrderStatus {
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
+    symbol @4 :Text;                                 # empty in client request
 }
 
 
@@ -240,7 +241,7 @@ struct AccountDataReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
-    orderList @3 :List(OrderData);
+    orders @3 :List(OrderData);
     ready @4 :Bool;
 }
 
@@ -248,7 +249,7 @@ struct AccountDataReport {
 struct WorkingOrdersReport{
     accountID @0 :UInt64;
     exchange @1 :Exchange;
-    orderList @2 :List(OrderData);
+    orders @2 :List(OrderData);
 }
 
 
