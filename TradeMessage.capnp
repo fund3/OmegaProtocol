@@ -220,36 +220,42 @@ struct ExecutionReport {
     exchangeOrderID @2 :Text = "<UNDEFINED>";
     accountID @3 :UInt64;
     exchange @4 :Exchange;
-    orderStatus @5 :OrderStatus;
-    filledQuantity @6 :Float64;
-    avgFillPrice @7 :Float64;
+    symbol @5 :Text = "<UNDEFINED>";
+    orderSide @6 :OrderSide;
+    orderType @7 :OrderType;
+    orderQuantity @8 :Float64;
+    orderPrice @9 :Float64;
+    timeInForce @10 :TimeInForce;
+    orderStatus @11 :OrderStatus;
+    filledQuantity @12 :Float64;
+    avgFillPrice @13 :Float64;
 
     type :union {
-        orderAccepted @8 :Void;
-        orderRejected @9 :RequestRejected;
-        orderReplaced @10 :Void;
-        replaceRejected @11 :RequestRejected;
-        orderCanceled @12 :Void;
-        cancelRejected @13 :RequestRejected;
-        orderFilled @14 :Void;
-        statusUpdate @15 :Void;
+        orderAccepted @14 :Void;
+        orderRejected @15 :RequestRejected;
+        orderReplaced @16 :Void;
+        replaceRejected @17 :RequestRejected;
+        orderCanceled @18 :Void;
+        cancelRejected @19 :RequestRejected;
+        orderFilled @20 :Void;
+        statusUpdate @21 :Void;
     }
 }
+
 
 
 struct AccountDataReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
-    orders @3 :List(OrderData);
-    ready @4 :Bool;
+    orders @3 :List(ExecutionReport);
 }
 
 
 struct WorkingOrdersReport{
     accountID @0 :UInt64;
     exchange @1 :Exchange;
-    orders @2 :List(OrderData);
+    orders @2 :List(ExecutionReport);
 }
 
 
@@ -282,22 +288,6 @@ struct SystemMessage {
 
 struct RequestRejected {
     rejectionReason @0 :Text = "<NONE>";
-}
-
-
-struct OrderData {
-    orderID @0 :Text = "<UNDEFINED>";
-    clientOrderID @1 :UInt64;
-    exchangeOrderID @2 :Text = "<UNDEFINED>";
-    symbol @3 :Text = "<UNDEFINED>";
-    orderSide @4 :OrderSide;
-    orderType @5 :OrderType;
-    orderQuantity @6 :Float64;
-    orderPrice @7 :Float64;
-    timeInForce @8 :TimeInForce;
-    orderStatus @9 :OrderStatus;
-    filledQuantity @10 :Float64;
-    avgFillPrice @11 :Float64;
 }
 
 
