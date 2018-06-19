@@ -98,7 +98,8 @@ struct Request {
 
 
 struct Logon {
-    credentials @0 :List(AccountCredentials);        # should not be set in client request, for internal usage only
+    credentials @0 :List(AccountCredentials);        # normally credentials stored in secured storage on a backend so this field is empty
+                                                     # if it is set, it will overwrite stored credentials
 }
 
 
@@ -205,7 +206,7 @@ struct Response {
         # trading
         executionReport @7 :ExecutionReport;
 
-        #accounting
+        # accounting
         accountDataReport @8 :AccountDataReport;
         workingOrdersReport @9 :WorkingOrdersReport;
         accountBalancesReport @10 :AccountBalancesReport;
