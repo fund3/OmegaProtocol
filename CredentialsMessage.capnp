@@ -23,13 +23,13 @@ struct CredentialsMessage {
 
 
 struct Request {
-    clientID @0 :Text;
+    clientID @0 :UInt64;
 }
 
 
 
 struct Response {
-    clientID @0 :Text;
+    clientID @0 :UInt64;
     accountCredentials @1 :List(AccountCredentials);
 }
 
