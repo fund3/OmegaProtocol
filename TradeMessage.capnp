@@ -71,7 +71,7 @@ struct TradeMessage {
 
 
 struct Request {
-    clientID @0 :Text;
+    clientID @0 :UInt64;
     senderCompID @1 :Text;
 
     body :union {
@@ -191,7 +191,7 @@ struct TestMessage {
 
 
 struct Response {
-    clientID @0 :Text;
+    clientID @0 :UInt64;
     senderCompID @1 :Text;
     body :union {
         # system
