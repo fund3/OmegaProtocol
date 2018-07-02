@@ -81,7 +81,7 @@ struct Request {
 
         # logon-logoff
         logon @4 :Logon;                             # response: LogonAck
-        logoff @5 :Logoff;                           # response: LogoffAck
+        logoff @5 :Void;                             # response: LogoffAck
         
         # trading requests
         placeOrder @6 :PlaceOrder;                   # response: ExecutionReport
@@ -100,11 +100,6 @@ struct Request {
 struct Logon {
     credentials @0 :List(AccountCredentials);        # normally credentials stored in secured storage on a backend so this field is empty
                                                      # if it is set, it will overwrite stored credentials
-}
-
-
-struct Logoff {
-    clientAccounts @0 :List(UInt64);                 # should not be set in client request, for internal usage only
 }
 
 
