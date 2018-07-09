@@ -1,6 +1,6 @@
 using Cxx = import "/capnp/c++.capnp";
 
-$Cxx.namespace("proto");
+$Cxx.namespace("proto::credentials");
 @0xc880f6db4d43d655;
 
 

@@ -1,7 +1,7 @@
 using Cxx = import "/capnp/c++.capnp";
 using import "Exchanges.capnp".Exchange;
 
-$Cxx.namespace("proto");
+$Cxx.namespace("proto::trade");
 @0xb1f6c0f74d970d0c;
 
 
