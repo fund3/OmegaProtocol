@@ -91,8 +91,9 @@ struct Request {
 
         # account-related request
         getAccountData @10 :GetAccountData;          # response: AccountDataReport
-        getWorkingOrders @11 :GetWorkingOrders;      # response: WorkingOrdersReport
-        getAccountBalances @12 :GetAccountBalances;  # response: AccountBalancesReport
+        getAccountBalances @11 :GetAccountBalances;  # response: AccountBalancesReport
+        getOpenPositions @12 :GetOpenPositions;      # response: OpenPositionsReport
+        getWorkingOrders @13 :GetWorkingOrders;      # response: WorkingOrdersReport
     }
 }
 
@@ -113,6 +114,11 @@ struct PlaceOrder {
     orderQuantity @6 :Float64;                       # required
     orderPrice @7 :Float64;                          # required for LIMIT
     timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
+    leverage :union {                                # optional
+        none @9 :Void;
+        exchangeDefault @10 :Void;
+        custom @11 :Float64;
+    }                              
 }
 
 
@@ -127,6 +133,11 @@ struct ReplaceOrder {
     orderQuantity @7 :Float64;                       # optional
     orderPrice @8 :Float64;                          # optional
     timeInForce @9 :TimeInForce;                     # optional
+    leverage :union {                                # empty in client request
+        none @10 :Void;
+        exchangeDefault @11 :Void;
+        custom @12 :Float64;
+    } 
 }
 
 
@@ -154,15 +165,19 @@ struct GetAccountData {
 }
 
 
-struct GetWorkingOrders {
-    accountID @0 :UInt64;                            # required
-}
-
-
 struct GetAccountBalances {
     accountID @0 :UInt64;                            # required
 }
 
+
+struct GetOpenPositions {
+    accountID @0 :UInt64;                            # required
+}
+
+
+struct GetWorkingOrders {
+    accountID @0 :UInt64;                            # required
+}
 
 
 
@@ -203,8 +218,9 @@ struct Response {
 
         # accounting
         accountDataReport @8 :AccountDataReport;
-        workingOrdersReport @9 :WorkingOrdersReport;
-        accountBalancesReport @10 :AccountBalancesReport;
+        accountBalancesReport @9 :AccountBalancesReport;
+        openPositionsReport @10 :OpenPositionsReport;
+        workingOrdersReport @11 :WorkingOrdersReport;
     }
 }
 
@@ -244,14 +260,8 @@ struct AccountDataReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
-    orders @3 :List(ExecutionReport);
-}
-
-
-struct WorkingOrdersReport{
-    accountID @0 :UInt64;
-    exchange @1 :Exchange;
-    orders @2 :List(ExecutionReport);
+    openPositions @3 :List(OpenPosition);
+    orders @4 :List(ExecutionReport);
 }
 
 
@@ -259,6 +269,20 @@ struct AccountBalancesReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
+}
+
+
+struct OpenPositionsReport {
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
+    openPositions @2 :List(OpenPosition);
+}
+
+
+struct WorkingOrdersReport{
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
+    orders @2 :List(ExecutionReport);
 }
 
 
@@ -291,6 +315,14 @@ struct Balance {
     currency @0 :Text = "<UNDEFINED>";
     fullBalance @1 :Float64;
     availableBalance @2 :Float64;   
+}
+
+
+struct OpenPosition {
+    symbol @0 :Text = "<UNDEFINED>";    # symbol
+    quantity @1 :Float64;               # positive value for long position, nagative for short
+    basePrice @2 :Float64;              # opening price
+    unrealizedPL @3 :Float64;           # unrealized profit/loss
 }
 
 
