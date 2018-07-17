@@ -10,7 +10,7 @@ $Cxx.namespace("proto::trade");
 #######################################################################################################
 
 
-enum OrderSide {
+enum Side {
     undefined @0;
     buy  @1;
     sell @2;
@@ -91,8 +91,9 @@ struct Request {
 
         # account-related request
         getAccountData @10 :GetAccountData;          # response: AccountDataReport
-        getWorkingOrders @11 :GetWorkingOrders;      # response: WorkingOrdersReport
-        getAccountBalances @12 :GetAccountBalances;  # response: AccountBalancesReport
+        getAccountBalances @11 :GetAccountBalances;  # response: AccountBalancesReport
+        getOpenPositions @12 :GetOpenPositions;      # response: OpenPositionsReport
+        getWorkingOrders @13 :GetWorkingOrders;      # response: WorkingOrdersReport
     }
 }
 
@@ -108,11 +109,16 @@ struct PlaceOrder {
     clientOrderID @1 :UInt64;                        # required
     orderID @2 :Text;                                # empty in client request
     symbol @3 :Text;                                 # required
-    orderSide @4 :OrderSide;                         # required
+    side @4 :Side;                                   # required
     orderType @5 :OrderType = limit;                 # optional, default : LIMIT
-    orderQuantity @6 :Float64;                       # required
-    orderPrice @7 :Float64;                          # required for LIMIT
+    quantity @6 :Float64;                            # required
+    price @7 :Float64;                               # required for LIMIT
     timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
+    leverage :union {                                # optional
+        none @9 :Void;                                   # no leverage (by default)
+        exchangeDefault @10 :Void;                       # use predefined exchange leverage
+        custom @11 :Float64;                             # use custom leverage (if supported by exchange)
+    }                              
 }
 
 
@@ -122,11 +128,16 @@ struct ReplaceOrder {
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
     symbol @4 :Text;                                 # empty in client request
-    orderSide @5 :OrderSide;                         # optional
+    side @5 :Side;                                   # optional
     orderType @6 :OrderType;                         # optional
-    orderQuantity @7 :Float64;                       # optional
-    orderPrice @8 :Float64;                          # optional
+    quantity @7 :Float64;                            # optional
+    price @8 :Float64;                               # optional
     timeInForce @9 :TimeInForce;                     # optional
+    leverage :union {                                # empty in client request
+        none @10 :Void;
+        exchangeDefault @11 :Void;
+        custom @12 :Float64;
+    } 
 }
 
 
@@ -154,15 +165,19 @@ struct GetAccountData {
 }
 
 
-struct GetWorkingOrders {
-    accountID @0 :UInt64;                            # required
-}
-
-
 struct GetAccountBalances {
     accountID @0 :UInt64;                            # required
 }
 
+
+struct GetOpenPositions {
+    accountID @0 :UInt64;                            # required
+}
+
+
+struct GetWorkingOrders {
+    accountID @0 :UInt64;                            # required
+}
 
 
 
@@ -203,8 +218,9 @@ struct Response {
 
         # accounting
         accountDataReport @8 :AccountDataReport;
-        workingOrdersReport @9 :WorkingOrdersReport;
-        accountBalancesReport @10 :AccountBalancesReport;
+        accountBalancesReport @9 :AccountBalancesReport;
+        openPositionsReport @10 :OpenPositionsReport;
+        workingOrdersReport @11 :WorkingOrdersReport;
     }
 }
 
@@ -217,10 +233,10 @@ struct ExecutionReport {
     accountID @3 :UInt64;
     exchange @4 :Exchange;
     symbol @5 :Text = "<UNDEFINED>";
-    orderSide @6 :OrderSide;
+    side @6 :Side;
     orderType @7 :OrderType;
-    orderQuantity @8 :Float64;
-    orderPrice @9 :Float64;
+    quantity @8 :Float64;
+    price @9 :Float64;
     timeInForce @10 :TimeInForce;
     orderStatus @11 :OrderStatus;
     filledQuantity @12 :Float64;
@@ -244,14 +260,8 @@ struct AccountDataReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
-    orders @3 :List(ExecutionReport);
-}
-
-
-struct WorkingOrdersReport{
-    accountID @0 :UInt64;
-    exchange @1 :Exchange;
-    orders @2 :List(ExecutionReport);
+    openPositions @3 :List(OpenPosition);
+    orders @4 :List(ExecutionReport);
 }
 
 
@@ -259,6 +269,20 @@ struct AccountBalancesReport {
     accountID @0 :UInt64;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
+}
+
+
+struct OpenPositionsReport {
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
+    openPositions @2 :List(OpenPosition);
+}
+
+
+struct WorkingOrdersReport{
+    accountID @0 :UInt64;
+    exchange @1 :Exchange;
+    orders @2 :List(ExecutionReport);
 }
 
 
@@ -291,6 +315,15 @@ struct Balance {
     currency @0 :Text = "<UNDEFINED>";
     fullBalance @1 :Float64;
     availableBalance @2 :Float64;   
+}
+
+
+struct OpenPosition {
+    symbol @0 :Text = "<UNDEFINED>";    # symbol
+    side @1 :Side;                      # position side (buy or sell)
+    quantity @2 :Float64;               # positiion quantity
+    initialPrice @3 :Float64;           # initial price
+    unrealizedPL @4 :Float64;           # unrealized profit/loss before fees
 }
 
 
