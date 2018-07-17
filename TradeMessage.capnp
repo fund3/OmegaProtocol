@@ -115,9 +115,9 @@ struct PlaceOrder {
     orderPrice @7 :Float64;                          # required for LIMIT
     timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
     leverage :union {                                # optional
-        none @9 :Void;
-        exchangeDefault @10 :Void;
-        custom @11 :Float64;
+        none @9 :Void;                                   # no leverage (by default)
+        exchangeDefault @10 :Void;                       # use predefined exchange leverage
+        custom @11 :Float64;                             # use custom leverage (if supported by exchange)
     }                              
 }
 
