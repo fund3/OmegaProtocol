@@ -59,6 +59,12 @@ struct Leverage {
 }
 
 
+struct Account {
+    id @0 :UInt64;     # AccountID, required
+    type @1 :Text;     # exchange account type, empty in client request 
+}
+
+
 
 #######################################################################################################
 #                   MESSAGE
@@ -108,13 +114,12 @@ struct Request {
 
 
 struct Logon {
-    credentials @0 :List(AccountCredentials);        # normally credentials stored in secured storage on a backend so this field is empty
-                                                     # if it is set, it will overwrite stored credentials
+    credentials @0 :List(AccountCredentials);        # required
 }
 
 
 struct PlaceOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     clientOrderID @1 :UInt64;                        # required
     orderID @2 :Text;                                # empty in client request
     symbol @3 :Text;                                 # required
@@ -129,7 +134,7 @@ struct PlaceOrder {
 
 
 struct ReplaceOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -144,7 +149,7 @@ struct ReplaceOrder {
 
 
 struct CancelOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -153,7 +158,7 @@ struct CancelOrder {
 
 
 struct GetOrderStatus {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -163,22 +168,22 @@ struct GetOrderStatus {
 
 # return full account snapshot including balances and working orders in one transaction
 struct GetAccountData {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetAccountBalances {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetOpenPositions {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetWorkingOrders {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
@@ -232,7 +237,7 @@ struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
     exchangeOrderID @2 :Text = "<UNDEFINED>";
-    accountID @3 :UInt64;
+    account @3 :Account; 
     exchange @4 :Exchange;
     symbol @5 :Text = "<UNDEFINED>";
     side @6 :Side;
@@ -260,7 +265,7 @@ struct ExecutionReport {
 
 
 struct AccountDataReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
     openPositions @3 :List(OpenPosition);
@@ -269,21 +274,21 @@ struct AccountDataReport {
 
 
 struct AccountBalancesReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
 }
 
 
 struct OpenPositionsReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     openPositions @2 :List(OpenPosition);
 }
 
 
 struct WorkingOrdersReport{
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     orders @2 :List(ExecutionReport);
 }
@@ -303,7 +308,7 @@ struct LogoffAck {
 
 
 struct SystemMessage {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     message @2 :Text = "<NONE>";
 }
