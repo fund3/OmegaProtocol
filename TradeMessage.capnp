@@ -50,12 +50,16 @@ enum TimeInForce {
 }
 
 
-struct Leverage {
-    union {                                                 
-        none @0 :Void;                                  # no leverage (by default)
-        exchangeDefault @1 :Void;                       # use predefined exchange leverage
-        custom @2 :Float64;                             # use custom leverage
-    }
+enum LeverageType {
+    none @0;               # no leverage (by default)
+    exchangeDefault @1;    # use predefined exchange leverage
+    custom @2;             # use custom leverage
+}
+
+
+struct Account {
+    id @0 :UInt64;         # AccountID, required
+    label @1 :Text;        # exchange account lavel (default, margin, exchange, etc), empty in client request  
 }
 
 
@@ -108,13 +112,12 @@ struct Request {
 
 
 struct Logon {
-    credentials @0 :List(AccountCredentials);        # normally credentials stored in secured storage on a backend so this field is empty
-                                                     # if it is set, it will overwrite stored credentials
+    credentials @0 :List(AccountCredentials);        # required
 }
 
 
 struct PlaceOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     clientOrderID @1 :UInt64;                        # required
     orderID @2 :Text;                                # empty in client request
     symbol @3 :Text;                                 # required
@@ -123,13 +126,13 @@ struct PlaceOrder {
     quantity @6 :Float64;                            # required
     price @7 :Float64;                               # required for LIMIT
     timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
-    leverage @9:Leverage;                            # optional, default : None
-                             
+    leverageType @9 :LeverageType;                   # optional, default : None
+    leverage @10 :Float64;                           # optional, default : 0 (no leverage)
 }
 
 
 struct ReplaceOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -139,12 +142,13 @@ struct ReplaceOrder {
     quantity @7 :Float64;                            # optional
     price @8 :Float64;                               # optional
     timeInForce @9 :TimeInForce;                     # optional
-    leverage @10:Leverage;                           # empty in client request
+    leverageType @10 :LeverageType;                  # empty in client request
+    leverage @11 :Float64;                           # empty in client request
 }
 
 
 struct CancelOrder {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -153,7 +157,7 @@ struct CancelOrder {
 
 
 struct GetOrderStatus {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
@@ -163,22 +167,22 @@ struct GetOrderStatus {
 
 # return full account snapshot including balances and working orders in one transaction
 struct GetAccountData {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetAccountBalances {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetOpenPositions {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
 struct GetWorkingOrders {
-    accountID @0 :UInt64;                            # required
+    account @0 :Account;                             # required
 }
 
 
@@ -232,7 +236,7 @@ struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
     exchangeOrderID @2 :Text = "<UNDEFINED>";
-    accountID @3 :UInt64;
+    account @3 :Account; 
     exchange @4 :Exchange;
     symbol @5 :Text = "<UNDEFINED>";
     side @6 :Side;
@@ -240,27 +244,28 @@ struct ExecutionReport {
     quantity @8 :Float64;
     price @9 :Float64;
     timeInForce @10 :TimeInForce;
-    leverage @11:Leverage;
-    orderStatus @12 :OrderStatus;
-    filledQuantity @13 :Float64;
-    avgFillPrice @14 :Float64;
+    leverageType @11 :LeverageType;
+    leverage @12 :Float64;      
+    orderStatus @13 :OrderStatus;
+    filledQuantity @14 :Float64;
+    avgFillPrice @15 :Float64;
 
     type :union {
-        orderAccepted @15 :Void;
-        orderRejected @16 :RequestRejected;
-        orderReplaced @17 :Void;
-        replaceRejected @18 :RequestRejected;
-        orderCanceled @19 :Void;
-        cancelRejected @20 :RequestRejected;
-        orderFilled @21 :Void;
-        statusUpdate @22 :Void;
+        orderAccepted @16 :Void;
+        orderRejected @17 :RequestRejected;
+        orderReplaced @18 :Void;
+        replaceRejected @19 :RequestRejected;
+        orderCanceled @20 :Void;
+        cancelRejected @21 :RequestRejected;
+        orderFilled @22 :Void;
+        statusUpdate @23 :Void;
     }
 }
 
 
 
 struct AccountDataReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
     openPositions @3 :List(OpenPosition);
@@ -269,21 +274,21 @@ struct AccountDataReport {
 
 
 struct AccountBalancesReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     balances @2 :List(Balance);
 }
 
 
 struct OpenPositionsReport {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     openPositions @2 :List(OpenPosition);
 }
 
 
 struct WorkingOrdersReport{
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     orders @2 :List(ExecutionReport);
 }
@@ -303,7 +308,7 @@ struct LogoffAck {
 
 
 struct SystemMessage {
-    accountID @0 :UInt64;
+    account @0 :Account;
     exchange @1 :Exchange;
     message @2 :Text = "<NONE>";
 }
