@@ -50,18 +50,16 @@ enum TimeInForce {
 }
 
 
-struct Leverage {
-    union {                                                 
-        none @0 :Void;                                  # no leverage (by default)
-        exchangeDefault @1 :Void;                       # use predefined exchange leverage
-        custom @2 :Float64;                             # use custom leverage
-    }
+enum LeverageType {
+    none @0;               # no leverage (by default)
+    exchangeDefault @1;    # use predefined exchange leverage
+    custom @2;             # use custom leverage
 }
 
 
 struct Account {
-    id @0 :UInt64;     # AccountID, required
-    type @1 :Text;     # exchange account type, empty in client request 
+    id @0 :UInt64;         # AccountID, required
+    label @1 :Text;        # exchange account lavel (default, margin, exchange, etc), empty in client request  
 }
 
 
@@ -128,8 +126,8 @@ struct PlaceOrder {
     quantity @6 :Float64;                            # required
     price @7 :Float64;                               # required for LIMIT
     timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
-    leverage @9:Leverage;                            # optional, default : None
-                             
+    leverageType @9 :LeverageType;                   # optional, default : None
+    leverage @10 :Float64;                           # optional, default : 0 (no leverage)
 }
 
 
@@ -144,7 +142,8 @@ struct ReplaceOrder {
     quantity @7 :Float64;                            # optional
     price @8 :Float64;                               # optional
     timeInForce @9 :TimeInForce;                     # optional
-    leverage @10:Leverage;                           # empty in client request
+    leverageType @10 :LeverageType;                  # empty in client request
+    leverage @11 :Float64;                           # empty in client request
 }
 
 
@@ -245,20 +244,21 @@ struct ExecutionReport {
     quantity @8 :Float64;
     price @9 :Float64;
     timeInForce @10 :TimeInForce;
-    leverage @11:Leverage;
-    orderStatus @12 :OrderStatus;
-    filledQuantity @13 :Float64;
-    avgFillPrice @14 :Float64;
+    leverageType @11 :LeverageType;
+    leverage @12 :Float64;      
+    orderStatus @13 :OrderStatus;
+    filledQuantity @14 :Float64;
+    avgFillPrice @15 :Float64;
 
     type :union {
-        orderAccepted @15 :Void;
-        orderRejected @16 :RequestRejected;
-        orderReplaced @17 :Void;
-        replaceRejected @18 :RequestRejected;
-        orderCanceled @19 :Void;
-        cancelRejected @20 :RequestRejected;
-        orderFilled @21 :Void;
-        statusUpdate @22 :Void;
+        orderAccepted @16 :Void;
+        orderRejected @17 :RequestRejected;
+        orderReplaced @18 :Void;
+        replaceRejected @19 :RequestRejected;
+        orderCanceled @20 :Void;
+        cancelRejected @21 :RequestRejected;
+        orderFilled @22 :Void;
+        statusUpdate @23 :Void;
     }
 }
 
