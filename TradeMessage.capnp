@@ -188,7 +188,7 @@ struct GetWorkingOrders {
 
 
 struct AccountCredentials {
-    accountID @0 :UInt64;
+    account @0 :Account;
     apiKey @1 :Text = "<NONE>";
     secretKey @2 :Text = "<NONE>";
     passphrase @3 :Text = "<NONE>";
