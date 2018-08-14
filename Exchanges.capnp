@@ -12,10 +12,13 @@ $Cxx.namespace("proto");
 enum Exchange {
     undefined @0;
     poloniex  @1;
-    gdax @2;
+    gdax @2;               # Rebranded to Coinbase Pro/Prime. Will be removed in the next version.
     kraken @3;
     gemini @4;
     bitfinex @5;
     bittrex @6;
     binance @7;
+    coinbasePro @8;
+    coinbasePrime @9;
+    bitstamp @10;
 }
