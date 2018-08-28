@@ -59,7 +59,7 @@ enum LeverageType {
 
 struct Account {
     id @0 :UInt64;         # AccountID, required
-    label @1 :Text;        # exchange account lavel (default, margin, exchange, etc), empty in client request  
+    label @1 :Text;        # exchange account label (default, margin, exchange, etc), empty in client request  
 }
 
 
@@ -89,24 +89,25 @@ struct Request {
 
     body :union {
         # system
-        heartbeat @2 :Void;                          # response: Heartbeat
-        test @3 :TestMessage;                        # response: TestMessage
+        heartbeat @2 :Void;                            # response: Heartbeat
+        test @3 :TestMessage;                          # response: TestMessage
 
         # logon-logoff
-        logon @4 :Logon;                             # response: LogonAck
-        logoff @5 :Void;                             # response: LogoffAck
+        logon @4 :Logon;                               # response: LogonAck
+        logoff @5 :Void;                               # response: LogoffAck
         
         # trading requests
-        placeOrder @6 :PlaceOrder;                   # response: ExecutionReport
-        replaceOrder @7 :ReplaceOrder;               # response: ExecutionReport
-        cancelOrder @8 :CancelOrder;                 # response: ExecutionReport
-        getOrderStatus @9 :GetOrderStatus;           # response: ExecutionReport
+        placeOrder @6 :PlaceOrder;                     # response: ExecutionReport
+        replaceOrder @7 :ReplaceOrder;                 # response: ExecutionReport
+        cancelOrder @8 :CancelOrder;                   # response: ExecutionReport
+        getOrderStatus @9 :GetOrderStatus;             # response: ExecutionReport
+        getOrderMassStatus @14 :GetOrderMassStatus;    # response: WorkingOrdersReport
 
         # account-related request
-        getAccountData @10 :GetAccountData;          # response: AccountDataReport
-        getAccountBalances @11 :GetAccountBalances;  # response: AccountBalancesReport
-        getOpenPositions @12 :GetOpenPositions;      # response: OpenPositionsReport
-        getWorkingOrders @13 :GetWorkingOrders;      # response: WorkingOrdersReport
+        getAccountData @10 :GetAccountData;            # response: AccountDataReport
+        getAccountBalances @11 :GetAccountBalances;    # response: AccountBalancesReport
+        getOpenPositions @12 :GetOpenPositions;        # response: OpenPositionsReport
+        getWorkingOrders @13 :GetWorkingOrders;        # response: WorkingOrdersReport
     }
 }
 
@@ -137,7 +138,7 @@ struct ReplaceOrder {
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
     symbol @4 :Text;                                 # empty in client request
-    side @5 :Side;                                   # optional
+    side @5 :Side;                                   # empty in client request
     orderType @6 :OrderType;                         # optional
     quantity @7 :Float64;                            # optional
     price @8 :Float64;                               # optional
@@ -162,6 +163,20 @@ struct GetOrderStatus {
     clientOrderID @2 :UInt64;                        # empty in client request
     exchangeOrderID @3 :Text;                        # empty in client request
     symbol @4 :Text;                                 # empty in client request
+}
+
+
+struct GetOrderMassStatus {
+    account @0 :Account;                             # required
+
+    struct OrderInfo {
+        orderID @0 :Text;                            # required
+        clientOrderID @1 :UInt64;                    # empty in client request
+        exchangeOrderID @2 :Text;                    # empty in client request
+        symbol @3 :Text;                             # empty in client request
+    }
+
+    orderInfo @1 :List(OrderInfo); 
 }
 
 
