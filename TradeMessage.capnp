@@ -108,7 +108,7 @@ struct Request {
         getAccountBalances @12 :GetAccountBalances;    # response: AccountBalancesReport
         getOpenPositions @13 :GetOpenPositions;        # response: OpenPositionsReport
         getWorkingOrders @14 :GetWorkingOrders;        # response: WorkingOrdersReport
-        getCompletedOrders @15: GetCompletedOrders;    # response: CompletedOrdersReport
+        getCompletedOrders @15 :GetCompletedOrders;    # response: CompletedOrdersReport
     }
 }
 
