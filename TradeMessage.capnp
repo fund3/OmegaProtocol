@@ -57,9 +57,19 @@ enum LeverageType {
 }
 
 
+enum AccountType {
+    undefined @0;
+    exchange @1;
+    margin @2;
+    combined @3;
+}
+
+
 struct Account {
-    id @0 :UInt64;         # AccountID, required
-    label @1 :Text;        # exchange account label (default, margin, exchange, etc), empty in client request  
+    accountID @0 :UInt64;          # account ID, required
+    exchangeAccountID @1 :Text;    # exchange account/wallet id, empty in client request 
+    accountType @2 :AccountType;   # exchange account type (exhange, margin, combined), empty in client request (NOT IMPLEMENTED, will replace label)
+    label @3 :Text;                # exchange account label (default, margin, exchange, etc), empty in client request (WILL BE DEPRECATED IN NEXT VERSION) 
 }
 
 
