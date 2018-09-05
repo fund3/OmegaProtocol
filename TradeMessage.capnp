@@ -249,6 +249,7 @@ struct Response {
         accountBalancesReport @9 :AccountBalancesReport;
         openPositionsReport @10 :OpenPositionsReport;
         workingOrdersReport @11 :WorkingOrdersReport;
+        completedOrdersReport @12 :CompletedOrdersReport;
     }
 }
 
