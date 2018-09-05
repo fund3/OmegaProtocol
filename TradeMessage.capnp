@@ -101,13 +101,14 @@ struct Request {
         replaceOrder @7 :ReplaceOrder;                 # response: ExecutionReport
         cancelOrder @8 :CancelOrder;                   # response: ExecutionReport
         getOrderStatus @9 :GetOrderStatus;             # response: ExecutionReport
-        getOrderMassStatus @14 :GetOrderMassStatus;    # response: WorkingOrdersReport
+        getOrderMassStatus @10 :GetOrderMassStatus;    # response: WorkingOrdersReport
 
         # account-related request
-        getAccountData @10 :GetAccountData;            # response: AccountDataReport
-        getAccountBalances @11 :GetAccountBalances;    # response: AccountBalancesReport
-        getOpenPositions @12 :GetOpenPositions;        # response: OpenPositionsReport
-        getWorkingOrders @13 :GetWorkingOrders;        # response: WorkingOrdersReport
+        getAccountData @11 :GetAccountData;            # response: AccountDataReport
+        getAccountBalances @12 :GetAccountBalances;    # response: AccountBalancesReport
+        getOpenPositions @13 :GetOpenPositions;        # response: OpenPositionsReport
+        getWorkingOrders @14 :GetWorkingOrders;        # response: WorkingOrdersReport
+        getCompletedOrders @15: GetCompletedOrders;    # response: CompletedOrdersReport
     }
 }
 
@@ -200,6 +201,12 @@ struct GetWorkingOrders {
     account @0 :Account;                             # required
 }
 
+
+struct GetCompletedOrders {
+    account @0 :Account;                             # required
+    count @1 :UInt64;                                # optional, number of returned orders (most recent ones)
+    from @2 :Float64;                                # optional, UNIX timestamp, limit orders by completion time, if both 'count' and 'from' skipped returns orders for last 24h
+}
 
 
 struct AccountCredentials {
@@ -303,6 +310,13 @@ struct OpenPositionsReport {
 
 
 struct WorkingOrdersReport{
+    account @0 :Account;
+    exchange @1 :Exchange;
+    orders @2 :List(ExecutionReport);
+}
+
+
+struct CompletedOrdersReport{
     account @0 :Account;
     exchange @1 :Exchange;
     orders @2 :List(ExecutionReport);
