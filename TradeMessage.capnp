@@ -67,10 +67,10 @@ enum AccountType {
 
 struct AccountInfo {
     accountID @0 :UInt64;                     # account ID, required
-    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet id, empty in client request 
+    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet id, empty in client request
     accountType @2 :AccountType;              # exchange account type (exhange, margin, combined), empty in client request (NOT IMPLEMENTED, will replace label)
-    exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID, empty in client request 
-    label @4 :Text;                           # exchange account label (default, margin, exchange, etc), empty in client request (WILL BE DEPRECATED IN NEXT VERSION) 
+    exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID, empty in client request
+    label @4 :Text;                           # exchange account label (default, margin, exchange, etc), empty in client request (WILL BE DEPRECATED IN NEXT VERSION)
 }
 
 
@@ -106,7 +106,7 @@ struct Request {
         # logon-logoff
         logon @4 :Logon;                               # response: LogonAck
         logoff @5 :Void;                               # response: LogoffAck
-        
+
         # trading requests
         placeOrder @6 :PlaceOrder;                     # response: ExecutionReport
         replaceOrder @7 :ReplaceOrder;                 # response: ExecutionReport
@@ -138,7 +138,7 @@ struct PlaceOrder {
     orderType @5 :OrderType = limit;                 # optional, default : LIMIT
     quantity @6 :Float64;                            # required
     price @7 :Float64;                               # required for LIMIT
-    timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC 
+    timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC
     leverageType @9 :LeverageType;                   # optional, default : None
     leverage @10 :Float64;                           # optional, default : 0 (no leverage)
 }
@@ -188,7 +188,7 @@ struct GetOrderMassStatus {
         symbol @3 :Text;                             # empty in client request
     }
 
-    orderInfo @1 :List(OrderInfo); 
+    orderInfo @1 :List(OrderInfo);
 }
 
 
@@ -216,7 +216,7 @@ struct GetWorkingOrders {
 struct GetCompletedOrders {
     account @0 :AccountInfo;                         # required
     count @1 :UInt64;                                # optional, number of returned orders (most recent ones)
-    from @2 :Float64;                                # optional, UNIX timestamp, limit orders by completion time, if both 'count' and 'from' skipped returns orders for last 24h
+    since @2 :Float64;                               # optional, UNIX timestamp, limit orders by completion time, if both 'count' and 'since' skipped returns orders for last 24h
 }
 
 
@@ -270,7 +270,7 @@ struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
     exchangeOrderID @2 :Text = "<UNDEFINED>";
-    account @3 :AccountInfo; 
+    account @3 :AccountInfo;
     exchange @4 :Exchange;
     symbol @5 :Text = "<UNDEFINED>";
     side @6 :Side;
@@ -279,7 +279,7 @@ struct ExecutionReport {
     price @9 :Float64;
     timeInForce @10 :TimeInForce;
     leverageType @11 :LeverageType;
-    leverage @12 :Float64;      
+    leverage @12 :Float64;
     orderStatus @13 :OrderStatus;
     filledQuantity @14 :Float64;
     avgFillPrice @15 :Float64;
@@ -363,7 +363,7 @@ struct RequestRejected {
 struct Balance {
     currency @0 :Text = "<UNDEFINED>";
     fullBalance @1 :Float64;
-    availableBalance @2 :Float64;   
+    availableBalance @2 :Float64;
 }
 
 
