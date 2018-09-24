@@ -100,26 +100,27 @@ struct Request {
 
     body :union {
         # system
-        heartbeat @2 :Void;                            # response: Heartbeat
-        test @3 :TestMessage;                          # response: TestMessage
+        heartbeat @2 :Void;                               # response: Heartbeat
+        test @3 :TestMessage;                             # response: TestMessage
 
         # logon-logoff
-        logon @4 :Logon;                               # response: LogonAck
-        logoff @5 :Void;                               # response: LogoffAck
+        logon @4 :Logon;                                  # response: LogonAck
+        logoff @5 :Void;                                  # response: LogoffAck
 
         # trading requests
-        placeOrder @6 :PlaceOrder;                     # response: ExecutionReport
-        replaceOrder @7 :ReplaceOrder;                 # response: ExecutionReport
-        cancelOrder @8 :CancelOrder;                   # response: ExecutionReport
-        getOrderStatus @9 :GetOrderStatus;             # response: ExecutionReport
-        getOrderMassStatus @10 :GetOrderMassStatus;    # response: WorkingOrdersReport
+        placeOrder @6 :PlaceOrder;                        # response: ExecutionReport
+        replaceOrder @7 :ReplaceOrder;                    # response: ExecutionReport
+        cancelOrder @8 :CancelOrder;                      # response: ExecutionReport
+        getOrderStatus @9 :GetOrderStatus;                # response: ExecutionReport
+        getOrderMassStatus @10 :GetOrderMassStatus;       # response: WorkingOrdersReport
 
         # account-related request
-        getAccountData @11 :GetAccountData;            # response: AccountDataReport
-        getAccountBalances @12 :GetAccountBalances;    # response: AccountBalancesReport
-        getOpenPositions @13 :GetOpenPositions;        # response: OpenPositionsReport
-        getWorkingOrders @14 :GetWorkingOrders;        # response: WorkingOrdersReport
-        getCompletedOrders @15 :GetCompletedOrders;    # response: CompletedOrdersReport
+        getAccountData @11 :GetAccountData;               # response: AccountDataReport
+        getAccountBalances @12 :GetAccountBalances;       # response: AccountBalancesReport
+        getOpenPositions @13 :GetOpenPositions;           # response: OpenPositionsReport
+        getWorkingOrders @14 :GetWorkingOrders;           # response: WorkingOrdersReport
+        getCompletedOrders @15 :GetCompletedOrders;       # response: CompletedOrdersReport
+        getExchangeProperties @16 :GetExchangeProperties; # response: ExchangePropertiesReport
     }
 }
 
@@ -219,6 +220,10 @@ struct GetCompletedOrders {
     since @2 :Float64;                               # optional, UNIX timestamp, limit orders by completion time, if both 'count' and 'since' skipped returns orders for last 24h
 }
 
+struct GetExchangeProperties {
+    exchange @0 :Exchange;                           # required
+}
+
 
 struct AccountCredentials {
     account @0 :AccountInfo;
@@ -261,6 +266,7 @@ struct Response {
         openPositionsReport @10 :OpenPositionsReport;
         workingOrdersReport @11 :WorkingOrdersReport;
         completedOrdersReport @12 :CompletedOrdersReport;
+        exchangePropertiesReport @13 :ExchangePropertiesReport;
     }
 }
 
@@ -332,6 +338,25 @@ struct CompletedOrdersReport{
     account @0 :AccountInfo;
     exchange @1 :Exchange;
     orders @2 :List(ExecutionReport);
+}
+
+
+struct ExchangePropertiesReport{
+    exchange @0 :Exchange;
+    currencies @1 :List(Text);
+    symbols @2 :List(SymbolProperties);
+    timeInForces @3 :List(TimeInForce);
+    orderTypes @4 :List(OrderType);
+}
+
+
+struct SymbolProperties{
+    symbol @0 :Text;
+    priceResolution @1 :Float64;
+    quantityResolution @2 :Float64;
+    minQuantity @3 :Float64;
+    maxQuantity @4 :Float64;
+    isMargin @5 :Bool;
 }
 
 
