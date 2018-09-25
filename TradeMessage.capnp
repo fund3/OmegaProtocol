@@ -357,6 +357,7 @@ struct SymbolProperties{
     minQuantity @3 :Float64;
     maxQuantity @4 :Float64;
     isMargin @5 :Bool;
+    leverage @6 :List(Float64);
 }
 
 
