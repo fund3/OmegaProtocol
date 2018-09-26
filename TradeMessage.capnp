@@ -344,7 +344,7 @@ struct CompletedOrdersReport{
 struct ExchangePropertiesReport{
     exchange @0 :Exchange;
     currencies @1 :List(Text);
-    symbols @2 :List(SymbolProperties);
+    symbolProperties @2 :List(SymbolProperties);
     timeInForces @3 :List(TimeInForce);
     orderTypes @4 :List(OrderType);
 }
