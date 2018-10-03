@@ -352,8 +352,8 @@ struct ExchangePropertiesReport{
 
 struct SymbolProperties{
     symbol @0 :Text;
-    priceResolution @1 :Float64;
-    quantityResolution @2 :Float64;
+    pricePrecision @1 :Float64;
+    quantityPrecision @2 :Float64;
     minQuantity @3 :Float64;
     maxQuantity @4 :Float64;
     marginSupported @5 :Bool;
