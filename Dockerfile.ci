@@ -20,6 +20,4 @@ WORKDIR /src
 
 COPY . .
 
-RUN capnp compile -oc++ /src/TradeMessage.capnp
-
-RUN capnp compile -oc++ /src/Exchanges.capnp
+RUN find *.capnp | xargs capnp compile -oc++ 
