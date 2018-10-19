@@ -70,10 +70,8 @@ struct MarketDataEntry {
     type @1 :Type;
     price @2 :Float64;
     size @3 :Float64;
-    union {
-        position @4 :UInt8;
-        side @5 :Text;
-    }
+    position @4 :UInt8; # Position in orderbook, empty if the entry is not an orderbook update
+    side @5 :Text;
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         bid @0;
         offer @1; # A.k.a. ask
