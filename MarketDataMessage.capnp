@@ -11,9 +11,9 @@ struct MarketDataMessage {
     timestamp @1 :Float64;
     requestID @2 :UInt64;
     type :union {
-        marketDataRequest @3 :MarketDataRequest;
-        marketDataSnapshot @4 :MarketDataSnapshot;
-        marketDataIncrementalRefresh @5 :MarketDataIncrementalRefresh;
+        request @3 :MarketDataRequest;
+        snapshot @4 :MarketDataSnapshot;
+        update @5 :MarketDataIncrementalRefresh;
     }
 }
 
@@ -32,8 +32,8 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     subscriptionType @3 :SubscriptionType;
     enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
         snapshot @0;
-        snapshotAndUpdates @1; # subscribe
-        disablePreviousSnapshot @2; # unsubscribe
+        snapshotAndUpdates @1;
+        unsubscribe @2;
     }
 }
 
@@ -73,15 +73,16 @@ struct MarketDataEntry {
     position @4 :UInt8; # Position in orderbook, empty if the entry is not an orderbook update
     side @5 :Text;
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
-        bid @0;
-        offer @1; # A.k.a. ask
-        trade @2;
-        indexValue @3;
-        openingPrice @4;
-        closingPrice @5;
-        settlementPrice @6;
-        tradingSessionHighPrice @7;
-        tradingSessionLowPrice @8;
+        undefined @0;
+        bid @1;
+        ask @2;
+        trade @3;
+        indexValue @4;
+        openingPrice @5;
+        closingPrice @6;
+        settlementPrice @7;
+        tradingSessionHighPrice @8;
+        tradingSessionLowPrice @9;
     }
 }
 
@@ -90,8 +91,9 @@ struct MarketDataUpdate {
     action @1 :Action;
     entry @2 :MarketDataEntry;
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
-        new @0;
-        change @1;
-        delete @2;
+        undefined @0;
+        new @1;
+        change @2;
+        delete @3;
     }
 }
