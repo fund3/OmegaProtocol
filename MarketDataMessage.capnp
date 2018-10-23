@@ -33,7 +33,7 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
         undefined @0;
         snapshot @1;
-        subscribe @2;
+        snapshotAndUpdates @2;
         unsubscribe @3;
     }
 }
