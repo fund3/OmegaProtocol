@@ -11,9 +11,9 @@ struct MarketDataMessage {
     timestamp @1 :Float64;
     requestID @2 :UInt64;
     type :union {
-        marketDataRequest @3 :MarketDataRequest;
-        marketDataSnapshot @4 :MarketDataSnapshot;
-        marketDataIncrementalRefresh @5 :MarketDataIncrementalRefresh;
+        request @3 :MarketDataRequest;
+        snapshot @4 :MarketDataSnapshot;
+        update @5 :MarketDataIncrementalRefresh;
     }
 }
 
