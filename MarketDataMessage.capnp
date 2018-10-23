@@ -31,10 +31,9 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     depth @2 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
     subscriptionType @3 :SubscriptionType;
     enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
-        undefined @0;
-        snapshot @1;
-        snapshotAndUpdates @2;
-        unsubscribe @3;
+        snapshot @0;
+        snapshotAndUpdates @1;
+        unsubscribe @2;
     }
 }
 
