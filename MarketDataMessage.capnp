@@ -33,8 +33,8 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
     enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
         undefined @0;
         snapshot @1;
-        snapshotAndUpdates @2; # subscribe
-        disablePreviousSnapshot @3; # unsubscribe
+        subscribe @2;
+        unsubscribe @3;
     }
 }
 
@@ -76,7 +76,7 @@ struct MarketDataEntry {
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         undefined @0;
         bid @1;
-        offer @2; # A.k.a. ask
+        ask @2;
         trade @3;
         indexValue @4;
         openingPrice @5;
