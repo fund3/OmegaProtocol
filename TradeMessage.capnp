@@ -377,11 +377,13 @@ struct LogoffAck {
 struct SystemMessage {
     accountInfo @0 :AccountInfo;
     exchange @1 :Exchange;
+    errorCode @3 :UInt32;
     message @2 :Text = "<NONE>";
 }
 
 
 struct RequestRejected {
+    rejectionCode @1 :UInt32;
     rejectionReason @0 :Text = "<NONE>";
 }
 

@@ -21,4 +21,5 @@ enum Exchange {
     coinbasePrime @8;
     bitstamp @9;
     itBit @10;
+    okEx @11;
 }
