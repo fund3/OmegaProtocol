@@ -299,6 +299,7 @@ struct ExecutionReport {
         cancelRejected @21 :RequestRejected;
         orderFilled @22 :Void;
         statusUpdate @23 :Void;
+        statusUpdateRejected @24 :RequestRejected;
     }
 }
 
