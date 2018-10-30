@@ -3,13 +3,27 @@ $Cxx.namespace("proto");
 @0xb88da2a89ce6e0b2;
 
 #######################################################################################################
+#                   COMMON TYPES
+#######################################################################################################
+
+struct PairId {
+    exchange @0 :Text;
+    symbols @1 :List(Text);
+}
+
+struct EntriesById {
+    pairId @0 :PairId;                  # required
+    entries @1 :List(MarketDataEntry);  # required
+}
+
+#######################################################################################################
 #                   MESSAGE
 #######################################################################################################
 
 struct MarketDataMessage {
-    sequenceNumber @0 :UInt64;
-    timestamp @1 :Float64;
-    requestID @2 :UInt64;
+    sequenceNumber @0 :UInt64;              # optional
+    timestamp @1 :Float64;                  # required
+    requestID @2 :UInt64;                   # empty in client request
     type :union {
         request @3 :MarketDataRequest;
         snapshot @4 :MarketDataSnapshot;
@@ -22,14 +36,10 @@ struct MarketDataMessage {
 #######################################################################################################
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    symbolsByExchange @0 :List(SymbolsByExchange);
-    struct SymbolsByExchange {
-        exchange @0 :Text;
-        symbols @1 :List(Text);
-    }
-    entryTypes @1 :List(MarketDataEntry.Type);
-    depth @2 :UInt8; # 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
-    subscriptionType @3 :SubscriptionType;
+    pairId @0 :List(PairId);                        # required
+    entryTypes @1 :List(MarketDataEntry.Type);      # required
+    depth @2 :UInt8;                                # required, 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
+    subscriptionType @3 :SubscriptionType;          # required
     enum SubscriptionType { # http://www.fixwiki.org/fixwiki/SubscriptionRequestType
         snapshot @0;
         snapshotAndUpdates @1;
@@ -42,23 +52,13 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #######################################################################################################
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
-    timestamp @0 :Float64;
-    entriesBySymbolAndExchange @1 :List(EntriesBySymbolAndExchange);
-    struct EntriesBySymbolAndExchange {
-        symbol @0 :Text;
-        exchange @1 :Text;
-        entries @2 :List(MarketDataEntry);
-    }
+    timestamp @0 :Float64;                  # required
+    entriesById @1 :List(EntriesById);      # required
 }
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    timestamp @0 :Float64;
-    updatesBySymbolAndExchange @1 :List(UpdatesBySymbolAndExchange);
-    struct UpdatesBySymbolAndExchange {
-        symbol @0 :Text;
-        exchange @1 :Text;
-        updates @2 :List(MarketDataUpdate);
-    }
+    timestamp @0 :Float64;                  # required
+    entriesById @1 :List(EntriesById);      # required
 }
 
 #######################################################################################################
@@ -66,12 +66,19 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 #######################################################################################################
 
 struct MarketDataEntry {
-    eventTimestamp @0 :Float64;
-    type @1 :Type;
-    price @2 :Float64;
-    size @3 :Float64;
-    position @4 :UInt8; # Position in orderbook, empty if the entry is not an orderbook update
-    side @5 :Text;
+    eventTimestamp @0 :Float64;             # required               
+    action @1 :Action = undefined;          # required
+    type @2 :Type = undefined;              # required
+    price @3 :Float64;                      # required
+    size @4 :Float64;                       # required
+    position @5 :UInt8;                     # optional, position in orderbook, empty if the entry is not an orderbook update
+    side @6 :Text;                          # required
+    enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
+        undefined @0;
+        new @1;
+        change @2;
+        delete @3;
+    }
     enum Type { # http://www.fixwiki.org/fixwiki/MDEntryType
         undefined @0;
         bid @1;
@@ -83,17 +90,5 @@ struct MarketDataEntry {
         settlementPrice @7;
         tradingSessionHighPrice @8;
         tradingSessionLowPrice @9;
-    }
-}
-
-struct MarketDataUpdate {
-    eventTimestamp @0 :Float64;
-    action @1 :Action;
-    entry @2 :MarketDataEntry;
-    enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
-        undefined @0;
-        new @1;
-        change @2;
-        delete @3;
     }
 }
