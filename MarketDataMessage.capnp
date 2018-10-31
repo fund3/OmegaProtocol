@@ -36,7 +36,7 @@ struct MarketDataMessage {
 #######################################################################################################
 
 struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FIX.5.0SP2%2B
-    pairId @0 :List(PairId);                        # required
+    pairIds @0 :List(PairId);                    # required
     entryTypes @1 :List(MarketDataEntry.Type);      # required
     depth @2 :UInt8;                                # required, 0 = full, 1 = top of book; http://www.fixwiki.org/fixwiki/MarketDepth
     subscriptionType @3 :SubscriptionType;          # required
