@@ -67,10 +67,12 @@ enum AccountType {
 
 struct AccountInfo {
     accountID @0 :UInt64;                     # account ID, required
-    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet id, empty in client request
-    accountType @2 :AccountType;              # exchange account type (exhange, margin, combined), empty in client request (NOT IMPLEMENTED, will replace label)
-    exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID, empty in client request
-    label @4 :Text;                           # exchange account label (default, margin, exchange, etc), empty in client request (WILL BE DEPRECATED IN NEXT VERSION)
+
+    # next parameters empty in client request
+    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet ID
+    accountType @2 :AccountType;              # exchange account type (exhange, margin, combined)
+    exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID
+    label @4 :Text;                           # exchange account label (WILL BE DEPRECATED IN NEXT VERSION)
 }
 
 
@@ -133,15 +135,16 @@ struct Logon {
 struct PlaceOrder {
     accountInfo @0 :AccountInfo;                     # required
     clientOrderID @1 :UInt64;                        # required
-    orderID @2 :Text;                                # empty in client request
-    symbol @3 :Text;                                 # required
-    side @4 :Side;                                   # required
-    orderType @5 :OrderType = limit;                 # optional, default : LIMIT
-    quantity @6 :Float64;                            # required
-    price @7 :Float64;                               # required for LIMIT
-    timeInForce @8 :TimeInForce = gtc;               # optional, default : GTC
-    leverageType @9 :LeverageType;                   # optional, default : None
-    leverage @10 :Float64;                           # optional, default : 0 (no leverage)
+    clientOrderLinkID @2: Text;                      # optional
+    orderID @3 :Text;                                # empty in client request
+    symbol @4 :Text;                                 # required
+    side @5 :Side;                                   # required
+    orderType @6 :OrderType = limit;                 # optional, default : LIMIT
+    quantity @7 :Float64;                            # required
+    price @8 :Float64;                               # required for LIMIT
+    timeInForce @9 :TimeInForce = gtc;               # optional, default : GTC
+    leverageType @10 :LeverageType;                  # optional, default : None
+    leverage @11 :Float64;                           # optional, default : 0 (no leverage)
 }
 
 
@@ -149,15 +152,16 @@ struct ReplaceOrder {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
-    exchangeOrderID @3 :Text;                        # empty in client request
-    symbol @4 :Text;                                 # empty in client request
-    side @5 :Side;                                   # empty in client request
-    orderType @6 :OrderType;                         # optional
-    quantity @7 :Float64;                            # optional
-    price @8 :Float64;                               # optional
-    timeInForce @9 :TimeInForce;                     # optional
-    leverageType @10 :LeverageType;                  # empty in client request
-    leverage @11 :Float64;                           # empty in client request
+    clientOrderLinkID @3: Text;                      # empty in client request
+    exchangeOrderID @4 :Text;                        # empty in client request
+    symbol @5 :Text;                                 # empty in client request
+    side @6 :Side;                                   # empty in client request
+    orderType @7 :OrderType;                         # optional
+    quantity @8 :Float64;                            # optional
+    price @9 :Float64;                               # optional
+    timeInForce @10 :TimeInForce;                    # optional
+    leverageType @11 :LeverageType;                  # empty in client request
+    leverage @12 :Float64;                           # empty in client request
 }
 
 
@@ -165,8 +169,9 @@ struct CancelOrder {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
-    exchangeOrderID @3 :Text;                        # empty in client request
-    symbol @4 :Text;                                 # empty in client request
+    clientOrderLinkID @3: Text;                      # empty in client request
+    exchangeOrderID @4 :Text;                        # empty in client request
+    symbol @5 :Text;                                 # empty in client request
 }
 
 
@@ -174,8 +179,9 @@ struct GetOrderStatus {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
     clientOrderID @2 :UInt64;                        # empty in client request
-    exchangeOrderID @3 :Text;                        # empty in client request
-    symbol @4 :Text;                                 # empty in client request
+    clientOrderLinkID @3: Text;                      # empty in client request
+    exchangeOrderID @4 :Text;                        # empty in client request
+    symbol @5 :Text;                                 # empty in client request
 }
 
 
@@ -185,8 +191,9 @@ struct GetOrderMassStatus {
     struct OrderInfo {
         orderID @0 :Text;                            # required
         clientOrderID @1 :UInt64;                    # empty in client request
-        exchangeOrderID @2 :Text;                    # empty in client request
-        symbol @3 :Text;                             # empty in client request
+        clientOrderLinkID @2: Text;                  # empty in client request
+        exchangeOrderID @3 :Text;                    # empty in client request
+        symbol @4 :Text;                             # empty in client request
     }
 
     orderInfo @1 :List(OrderInfo);
@@ -275,31 +282,33 @@ struct Response {
 struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
     clientOrderID @1 :UInt64;
-    exchangeOrderID @2 :Text = "<UNDEFINED>";
-    accountInfo @3 :AccountInfo;
-    exchange @4 :Exchange;
-    symbol @5 :Text = "<UNDEFINED>";
-    side @6 :Side;
-    orderType @7 :OrderType;
-    quantity @8 :Float64;
-    price @9 :Float64;
-    timeInForce @10 :TimeInForce;
-    leverageType @11 :LeverageType;
-    leverage @12 :Float64;
-    orderStatus @13 :OrderStatus;
-    filledQuantity @14 :Float64;
-    avgFillPrice @15 :Float64;
+    clientOrderLinkID @2: Text;
+    exchangeOrderID @3 :Text = "<UNDEFINED>";
+    accountInfo @4 :AccountInfo;
+    exchange @5 :Exchange;
+    symbol @6 :Text = "<UNDEFINED>";
+    side @7 :Side;
+    orderType @8 :OrderType;
+    quantity @9 :Float64;
+    price @10 :Float64;
+    timeInForce @11 :TimeInForce;
+    leverageType @12 :LeverageType;
+    leverage @13 :Float64;
+    orderStatus @14 :OrderStatus;
+    filledQuantity @15 :Float64;
+    avgFillPrice @16 :Float64;
+    rejectionReason @17 :Text;
 
     type :union {
-        orderAccepted @16 :Void;
-        orderRejected @17 :RequestRejected;
-        orderReplaced @18 :Void;
-        replaceRejected @19 :RequestRejected;
-        orderCanceled @20 :Void;
-        cancelRejected @21 :RequestRejected;
-        orderFilled @22 :Void;
-        statusUpdate @23 :Void;
-        statusUpdateRejected @24 :RequestRejected;
+        orderAccepted @18 :Void;
+        orderRejected @19 :RequestRejected;
+        orderReplaced @20 :Void;
+        replaceRejected @21 :RequestRejected;
+        orderCanceled @22 :Void;
+        cancelRejected @23 :RequestRejected;
+        orderFilled @24 :Void;
+        statusUpdate @25 :Void;
+        statusUpdateRejected @26 :RequestRejected;
     }
 }
 
@@ -378,14 +387,14 @@ struct LogoffAck {
 struct SystemMessage {
     accountInfo @0 :AccountInfo;
     exchange @1 :Exchange;
-    errorCode @3 :UInt32;
-    message @2 :Text = "<NONE>";
+    errorCode @2 :UInt32;
+    message @3 :Text = "<NONE>";
 }
 
 
 struct RequestRejected {
-    rejectionCode @1 :UInt32;
-    rejectionReason @0 :Text = "<NONE>";
+    rejectionCode @0 :UInt32;
+    message @1 :Text = "<NONE>";
 }
 
 
