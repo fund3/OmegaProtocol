@@ -67,13 +67,12 @@ struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataInc
 
 struct MarketDataEntry {
     eventTimestamp @0 :Float64;             # required
-    pairID @1 :PairId;                      # required
-    action @2 :Action = undefined;          # required
-    type @3 :Type = undefined;              # required
-    price @4 :Float64;                      # required
-    size @5 :Float64;                       # required
-    position @6 :UInt8;                     # optional, position in orderbook, empty if the entry is not an orderbook update
-    side @7 :Text;                          # required
+    action @1 :Action = undefined;          # required
+    type @2 :Type = undefined;              # required
+    price @3 :Float64;                      # required
+    size @4 :Float64;                       # required
+    position @5 :UInt8;                     # optional, position in orderbook, empty if the entry is not an orderbook update
+    side @6 :Text;                          # required
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
         undefined @0;
         new @1;
