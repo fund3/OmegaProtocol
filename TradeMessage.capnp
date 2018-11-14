@@ -69,9 +69,10 @@ struct AccountInfo {
     accountID @0 :UInt64;                     # account ID, required
 
     # next parameters empty in client request
-    accountType @1 :AccountType;              # exchange account type (exhange, margin, combined)
-    exchangeAccountID @2 :Text = "<NONE>";    # exchange account/wallet ID
+    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet ID
+    accountType @2 :AccountType;              # exchange account type (exhange, margin, combined)
     exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID
+    label @4 :Text;                           # exchange account label (WILL BE DEPRECATED IN NEXT VERSION)
 }
 
 
