@@ -8,7 +8,7 @@ $Cxx.namespace("proto");
 
 struct PairId {
     exchange @0 :Text;
-    symbols @1 :List(Text);
+    symbol @1 :Text;
 }
 
 struct EntriesById {
