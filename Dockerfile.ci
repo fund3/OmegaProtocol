@@ -2,19 +2,15 @@ FROM ubuntu:bionic
 
 RUN \
   apt-get update && apt-get install -y \
-    autoconf automake libtool g++ git make wget \
+    autoconf automake libtool pkg-config g++ git make wget \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://capnproto.org/capnproto-c++-0.6.1.tar.gz && \
-    tar zxf capnproto-c++-0.6.1.tar.gz && \
-    cd capnproto-c++-0.6.1 && \
-    ./configure LDFLAGS="-static" && \
+RUN wget https://capnproto.org/capnproto-c++-0.7.0.tar.gz && \
+    tar zxf capnproto-c++-0.7.0.tar.gz && \
+    cd capnproto-c++-0.7.0 && \
+    ./configure && \
     make -j8 check && \
-    make install && \
-    mkdir -p /usr/local/share/cmake/CapnProto/ && \
-    cp cmake/CapnProtoMacros.cmake /usr/local/share/cmake/CapnProto/ && \
-    cp cmake/CapnProtoConfig.cmake.in /usr/local/share/cmake/CapnProto/ && \
-    cp cmake/FindCapnProto.cmake /usr/local/share/cmake/CapnProto/CapnProtoConfig.cmake
+    make install
 
 WORKDIR /src
 

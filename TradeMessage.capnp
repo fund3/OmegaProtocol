@@ -66,13 +66,13 @@ enum AccountType {
 
 
 struct AccountInfo {
-    accountID @0 :UInt64;                     # account ID, required
+    accountID @0 :UInt64;              # account ID, required
 
     # next parameters empty in client request
-    exchangeAccountID @1 :Text = "<NONE>";    # exchange account/wallet ID
-    accountType @2 :AccountType;              # exchange account type (exhange, margin, combined)
-    exchangeClientID @3 :Text = "<NONE>";     # exchange client (customer) ID
-    label @4 :Text;                           # exchange account label (WILL BE DEPRECATED IN NEXT VERSION)
+    exchange @1 :Exchange;             # exchange 
+    accountType @2 :AccountType;       # exchange account type (exhange, margin, combined)
+    exchangeAccountID @3 :Text;        # exchange account/wallet ID
+    exchangeClientID @4 :Text;         # exchange client (customer) ID
 }
 
 
@@ -285,30 +285,29 @@ struct ExecutionReport {
     clientOrderLinkID @2: Text;
     exchangeOrderID @3 :Text = "<UNDEFINED>";
     accountInfo @4 :AccountInfo;
-    exchange @5 :Exchange;
-    symbol @6 :Text = "<UNDEFINED>";
-    side @7 :Side;
-    orderType @8 :OrderType;
-    quantity @9 :Float64;
-    price @10 :Float64;
-    timeInForce @11 :TimeInForce;
-    leverageType @12 :LeverageType;
-    leverage @13 :Float64;
-    orderStatus @14 :OrderStatus;
-    filledQuantity @15 :Float64;
-    avgFillPrice @16 :Float64;
-    rejectionReason @17 :Text;
+    symbol @5 :Text = "<UNDEFINED>";
+    side @6 :Side;
+    orderType @7 :OrderType;
+    quantity @8 :Float64;
+    price @9 :Float64;
+    timeInForce @10 :TimeInForce;
+    leverageType @11 :LeverageType;
+    leverage @12 :Float64;
+    orderStatus @13 :OrderStatus;
+    filledQuantity @14 :Float64;
+    avgFillPrice @15 :Float64;
+    rejectionReason @16 :Text;
 
     type :union {
-        orderAccepted @18 :Void;
-        orderRejected @19 :RequestRejected;
-        orderReplaced @20 :Void;
-        replaceRejected @21 :RequestRejected;
-        orderCanceled @22 :Void;
-        cancelRejected @23 :RequestRejected;
-        orderFilled @24 :Void;
-        statusUpdate @25 :Void;
-        statusUpdateRejected @26 :RequestRejected;
+        orderAccepted @17 :Void;
+        orderRejected @18 :RequestRejected;
+        orderReplaced @19 :Void;
+        replaceRejected @20 :RequestRejected;
+        orderCanceled @21 :Void;
+        cancelRejected @22 :RequestRejected;
+        orderFilled @23 :Void;
+        statusUpdate @24 :Void;
+        statusUpdateRejected @25 :RequestRejected;
     }
 }
 
@@ -316,38 +315,33 @@ struct ExecutionReport {
 
 struct AccountDataReport {
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    balances @2 :List(Balance);
-    openPositions @3 :List(OpenPosition);
-    orders @4 :List(ExecutionReport);
+    balances @1 :List(Balance);
+    openPositions @2 :List(OpenPosition);
+    orders @3 :List(ExecutionReport);
 }
 
 
 struct AccountBalancesReport {
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    balances @2 :List(Balance);
+    balances @1 :List(Balance);
 }
 
 
 struct OpenPositionsReport {
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    openPositions @2 :List(OpenPosition);
+    openPositions @1 :List(OpenPosition);
 }
 
 
 struct WorkingOrdersReport{
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    orders @2 :List(ExecutionReport);
+    orders @1 :List(ExecutionReport);
 }
 
 
 struct CompletedOrdersReport{
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    orders @2 :List(ExecutionReport);
+    orders @1 :List(ExecutionReport);
 }
 
 
@@ -386,9 +380,8 @@ struct LogoffAck {
 
 struct SystemMessage {
     accountInfo @0 :AccountInfo;
-    exchange @1 :Exchange;
-    errorCode @2 :UInt32;
-    message @3 :Text = "<NONE>";
+    errorCode @1 :UInt32;
+    message @2 :Text = "<NONE>";
 }
 
 
