@@ -99,43 +99,47 @@ struct TradeMessage {
 struct Request {
     clientID @0 :UInt64;
     senderCompID @1 :Text;
+    accessToken @2 :Text; 
 
     body :union {
         # system
-        heartbeat @2 :Void;                               # response: Heartbeat
-        test @3 :TestMessage;                             # response: TestMessage
+        heartbeat @3 :Void;                               # response: Heartbeat
+        test @4 :TestMessage;                             # response: TestMessage
+        getServerTime @5 :Void;                           # response: UNIX timestamp
 
         # logon-logoff
-        logon @4 :Logon;                                  # response: LogonAck
-        logoff @5 :Void;                                  # response: LogoffAck
+        logon @6 :Logon;                                  # response: LogonAck
+        logoff @7 :Void;                                  # response: LogoffAck
+        authorizationRefresh @8 :AuthorizationRefresh;    # response: AuthorizationGrant 
 
         # trading requests
-        placeOrder @6 :PlaceOrder;                        # response: ExecutionReport
-        replaceOrder @7 :ReplaceOrder;                    # response: ExecutionReport
-        cancelOrder @8 :CancelOrder;                      # response: ExecutionReport
-        getOrderStatus @9 :GetOrderStatus;                # response: ExecutionReport
-        getOrderMassStatus @10 :GetOrderMassStatus;       # response: WorkingOrdersReport
+        placeOrder @9 :PlaceOrder;                        # response: ExecutionReport
+        replaceOrder @10 :ReplaceOrder;                   # response: ExecutionReport
+        cancelOrder @11 :CancelOrder;                     # response: ExecutionReport
+        getOrderStatus @12 :GetOrderStatus;               # response: ExecutionReport
+        getOrderMassStatus @13 :GetOrderMassStatus;       # response: WorkingOrdersReport
 
         # account-related request
-        getAccountData @11 :GetAccountData;               # response: AccountDataReport
-        getAccountBalances @12 :GetAccountBalances;       # response: AccountBalancesReport
-        getOpenPositions @13 :GetOpenPositions;           # response: OpenPositionsReport
-        getWorkingOrders @14 :GetWorkingOrders;           # response: WorkingOrdersReport
-        getCompletedOrders @15 :GetCompletedOrders;       # response: CompletedOrdersReport
-        getExchangeProperties @16 :GetExchangeProperties; # response: ExchangePropertiesReport
+        getAccountData @14 :GetAccountData;               # response: AccountDataReport
+        getAccountBalances @15 :GetAccountBalances;       # response: AccountBalancesReport
+        getOpenPositions @16 :GetOpenPositions;           # response: OpenPositionsReport
+        getWorkingOrders @17 :GetWorkingOrders;           # response: WorkingOrdersReport
+        getCompletedOrders @18 :GetCompletedOrders;       # response: CompletedOrdersReport
+        getExchangeProperties @19 :GetExchangeProperties; # response: ExchangePropertiesReport
     }
 }
 
 
 struct Logon {
-    credentials @0 :List(AccountCredentials);        # required
+    clientSecret @0 :Text;
+    credentials @1 :List(AccountCredentials);        # required
 }
 
 
 struct PlaceOrder {
     accountInfo @0 :AccountInfo;                     # required
     clientOrderID @1 :UInt64;                        # required
-    clientOrderLinkID @2: Text;                      # optional
+    clientOrderLinkID @2 :Text;                      # optional
     orderID @3 :Text;                                # empty in client request
     symbol @4 :Text;                                 # required
     side @5 :Side;                                   # required
@@ -227,6 +231,7 @@ struct GetCompletedOrders {
     since @2 :Float64;                               # optional, UNIX timestamp, limit orders by completion time, if both 'count' and 'since' skipped returns orders for last 24h
 }
 
+
 struct GetExchangeProperties {
     exchange @0 :Exchange;                           # required
 }
@@ -245,6 +250,11 @@ struct TestMessage {
 }
 
 
+struct AuthorizationRefresh {
+    refreshToken @0 :Text;
+}
+
+
 
 #######################################################################################################
 #                   RESPONSE
@@ -258,22 +268,24 @@ struct Response {
         # system
         heartbeat @2 :Void;
         test @3 :TestMessage;
-        system @4 : SystemMessage;
+        serverTime @4 :Float64;
+        system @5 : SystemMessage;
 
         # logon-logoff
-        logonAck @5 :LogonAck;
-        logoffAck @6 :LogoffAck;
+        logonAck @6 :LogonAck;
+        logoffAck @7 :LogoffAck;
+        authorizationGrant @8 :AuthorizationGrant;
 
         # trading
-        executionReport @7 :ExecutionReport;
+        executionReport @9 :ExecutionReport;
 
         # accounting
-        accountDataReport @8 :AccountDataReport;
-        accountBalancesReport @9 :AccountBalancesReport;
-        openPositionsReport @10 :OpenPositionsReport;
-        workingOrdersReport @11 :WorkingOrdersReport;
-        completedOrdersReport @12 :CompletedOrdersReport;
-        exchangePropertiesReport @13 :ExchangePropertiesReport;
+        accountDataReport @10 :AccountDataReport;
+        accountBalancesReport @11 :AccountBalancesReport;
+        openPositionsReport @12 :OpenPositionsReport;
+        workingOrdersReport @13 :WorkingOrdersReport;
+        completedOrdersReport @14 :CompletedOrdersReport;
+        exchangePropertiesReport @15 :ExchangePropertiesReport;
     }
 }
 
@@ -368,13 +380,23 @@ struct SymbolProperties{
 struct LogonAck {
     success @0 :Bool;
     message @1 :Text = "<NONE>";
-    clientAccounts @2 :List(UInt64);
+    clientAccounts @2 :List(AccountInfo);
+    authorizationGrant @3  :AuthorizationGrant;
 }
 
 
 struct LogoffAck {
     success @0 :Bool;
     message @1 :Text = "<NONE>";
+}
+
+
+struct AuthorizationGrant {
+    success @0 :Bool;
+    message @1 :Text;
+    accessToken @2 :Text;
+    refreshToken @3 :Text;
+    expireAt @4 :Float64; 
 }
 
 
