@@ -21,6 +21,10 @@ enum OrderType {
     undefined @0;
     market @1;
     limit @2;
+    stop @3;
+    stopLimit @4;
+    trailingStop @5;
+    trailingStopLimit @6;
 }
 
 
@@ -37,6 +41,20 @@ enum OrderStatus {
     canceled @9;
     rejected @10;
     expired @11;
+    failed @12;
+}
+
+
+enum ExecutionType {
+    orderAccepted @0;
+    orderRejected @1;
+    orderReplaced @2;
+    replaceRejected @3;
+    orderCanceled @4;
+    cancelRejected @5;
+    orderFilled @6;
+    statusUpdate @7;
+    statusUpdateRejected @8;
 }
 
 
@@ -100,32 +118,33 @@ struct Request {
     clientID @0 :UInt64;
     senderCompID @1 :Text;
     accessToken @2 :Text; 
+    requestID @3 :UInt64;
 
     body :union {
         # system
-        heartbeat @3 :Void;                               # response: Heartbeat
-        test @4 :TestMessage;                             # response: TestMessage
-        getServerTime @5 :Void;                           # response: UNIX timestamp
+        heartbeat @4 :Void;                               # response: Heartbeat
+        test @5 :TestMessage;                             # response: TestMessage
+        getServerTime @6 :Void;                           # response: UNIX timestamp
 
         # logon-logoff
-        logon @6 :Logon;                                  # response: LogonAck
-        logoff @7 :Void;                                  # response: LogoffAck
-        authorizationRefresh @8 :AuthorizationRefresh;    # response: AuthorizationGrant 
+        logon @7 :Logon;                                  # response: LogonAck
+        logoff @8 :Void;                                  # response: LogoffAck
+        authorizationRefresh @9 :AuthorizationRefresh;    # response: AuthorizationGrant 
 
         # trading requests
-        placeOrder @9 :PlaceOrder;                        # response: ExecutionReport
-        replaceOrder @10 :ReplaceOrder;                   # response: ExecutionReport
-        cancelOrder @11 :CancelOrder;                     # response: ExecutionReport
-        getOrderStatus @12 :GetOrderStatus;               # response: ExecutionReport
-        getOrderMassStatus @13 :GetOrderMassStatus;       # response: WorkingOrdersReport
+        placeOrder @10 :PlaceOrder;                       # response: ExecutionReport
+        replaceOrder @11 :ReplaceOrder;                   # response: ExecutionReport
+        cancelOrder @12 :CancelOrder;                     # response: ExecutionReport
+        getOrderStatus @13 :GetOrderStatus;               # response: ExecutionReport
+        getOrderMassStatus @14 :GetOrderMassStatus;       # response: WorkingOrdersReport
 
         # account-related request
-        getAccountData @14 :GetAccountData;               # response: AccountDataReport
-        getAccountBalances @15 :GetAccountBalances;       # response: AccountBalancesReport
-        getOpenPositions @16 :GetOpenPositions;           # response: OpenPositionsReport
-        getWorkingOrders @17 :GetWorkingOrders;           # response: WorkingOrdersReport
-        getCompletedOrders @18 :GetCompletedOrders;       # response: CompletedOrdersReport
-        getExchangeProperties @19 :GetExchangeProperties; # response: ExchangePropertiesReport
+        getAccountData @15 :GetAccountData;               # response: AccountDataReport
+        getAccountBalances @16 :GetAccountBalances;       # response: AccountBalancesReport
+        getOpenPositions @17 :GetOpenPositions;           # response: OpenPositionsReport
+        getWorkingOrders @18 :GetWorkingOrders;           # response: WorkingOrdersReport
+        getCompletedOrders @19 :GetCompletedOrders;       # response: CompletedOrdersReport
+        getExchangeProperties @20 :GetExchangeProperties; # response: ExchangePropertiesReport
     }
 }
 
@@ -264,28 +283,29 @@ struct AuthorizationRefresh {
 struct Response {
     clientID @0 :UInt64;
     senderCompID @1 :Text;
+    requestID @2 :UInt64;
     body :union {
         # system
-        heartbeat @2 :Void;
-        test @3 :TestMessage;
-        serverTime @4 :Float64;
-        system @5 : SystemMessage;
+        heartbeat @3 :Void;
+        test @4 :TestMessage;
+        serverTime @5 :Float64;
+        system @6 : SystemMessage;
 
         # logon-logoff
-        logonAck @6 :LogonAck;
-        logoffAck @7 :LogoffAck;
-        authorizationGrant @8 :AuthorizationGrant;
+        logonAck @7 :LogonAck;
+        logoffAck @8 :LogoffAck;
+        authorizationGrant @9 :AuthorizationGrant;
 
         # trading
-        executionReport @9 :ExecutionReport;
+        executionReport @10 :ExecutionReport;
 
         # accounting
-        accountDataReport @10 :AccountDataReport;
-        accountBalancesReport @11 :AccountBalancesReport;
-        openPositionsReport @12 :OpenPositionsReport;
-        workingOrdersReport @13 :WorkingOrdersReport;
-        completedOrdersReport @14 :CompletedOrdersReport;
-        exchangePropertiesReport @15 :ExchangePropertiesReport;
+        accountDataReport @11 :AccountDataReport;
+        accountBalancesReport @12 :AccountBalancesReport;
+        openPositionsReport @13 :OpenPositionsReport;
+        workingOrdersReport @14 :WorkingOrdersReport;
+        completedOrdersReport @15 :CompletedOrdersReport;
+        exchangePropertiesReport @16 :ExchangePropertiesReport;
     }
 }
 
@@ -308,19 +328,12 @@ struct ExecutionReport {
     orderStatus @13 :OrderStatus;
     filledQuantity @14 :Float64;
     avgFillPrice @15 :Float64;
-    rejectionReason @16 :Text;
-
-    type :union {
-        orderAccepted @17 :Void;
-        orderRejected @18 :RequestRejected;
-        orderReplaced @19 :Void;
-        replaceRejected @20 :RequestRejected;
-        orderCanceled @21 :Void;
-        cancelRejected @22 :RequestRejected;
-        orderFilled @23 :Void;
-        statusUpdate @24 :Void;
-        statusUpdateRejected @25 :RequestRejected;
-    }
+    fee @16 :Float64;
+    creationTime @17 :Float64;
+    submissionTime @18 :Float64;
+    completionTime @19 :Float64;
+    rejectionReason @20 :Message;
+    executionType @21 :ExecutionType;
 }
 
 
@@ -379,7 +392,7 @@ struct SymbolProperties{
 
 struct LogonAck {
     success @0 :Bool;
-    message @1 :Text = "<NONE>";
+    message @1 :Message;
     clientAccounts @2 :List(AccountInfo);
     authorizationGrant @3  :AuthorizationGrant;
 }
@@ -387,13 +400,13 @@ struct LogonAck {
 
 struct LogoffAck {
     success @0 :Bool;
-    message @1 :Text = "<NONE>";
+    message @1 :Message;
 }
 
 
 struct AuthorizationGrant {
     success @0 :Bool;
-    message @1 :Text;
+    message @1 :Message;
     accessToken @2 :Text;
     refreshToken @3 :Text;
     expireAt @4 :Float64; 
@@ -402,14 +415,7 @@ struct AuthorizationGrant {
 
 struct SystemMessage {
     accountInfo @0 :AccountInfo;
-    errorCode @1 :UInt32;
-    message @2 :Text = "<NONE>";
-}
-
-
-struct RequestRejected {
-    rejectionCode @0 :UInt32;
-    message @1 :Text = "<NONE>";
+    message @1 :Message;
 }
 
 
@@ -428,5 +434,10 @@ struct OpenPosition {
     unrealizedPL @4 :Float64;           # unrealized profit/loss before fees
 }
 
+
+struct Message {
+    code @0 :UInt32;
+    body @1 :Text = "<NONE>";
+}
 
 #######################################################################################################
