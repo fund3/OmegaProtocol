@@ -132,11 +132,11 @@ struct Request {
         authorizationRefresh @9 :AuthorizationRefresh;    # response: AuthorizationGrant 
 
         # trading requests
-        placeOrder @10 :PlaceOrder;                       # response: ExecutionReport
+        placeSingleOrder @10 :PlaceOrder;                 # response: ExecutionReport
         replaceOrder @11 :ReplaceOrder;                   # response: ExecutionReport
         cancelOrder @12 :CancelOrder;                     # response: ExecutionReport
         getOrderStatus @13 :GetOrderStatus;               # response: ExecutionReport
-        getOrderMassStatus @14 :GetOrderMassStatus;       # response: WorkingOrdersReport
+        getOrderMassStatus @14 :GetOrderMassStatus;       # response: Individual ExecutionReport per message 
 
         # account-related request
         getAccountData @15 :GetAccountData;               # response: AccountDataReport
@@ -150,7 +150,7 @@ struct Request {
 
 
 struct Logon {
-    clientSecret @0 :Text;
+    clientSecret @0 :Text;                           # required
     credentials @1 :List(AccountCredentials);        # required
 }
 
@@ -166,8 +166,9 @@ struct PlaceOrder {
     quantity @7 :Float64;                            # required
     price @8 :Float64;                               # required for LIMIT
     timeInForce @9 :TimeInForce = gtc;               # optional, default : GTC
-    leverageType @10 :LeverageType;                  # optional, default : None
-    leverage @11 :Float64;                           # optional, default : 0 (no leverage)
+    expireAt @10 :Float64;                           # optional, for GTT only
+    leverageType @11 :LeverageType;                  # optional, default : None
+    leverage @12 :Float64;                           # optional, default : 0 (no leverage)
 }
 
 
@@ -179,12 +180,13 @@ struct ReplaceOrder {
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
     side @6 :Side;                                   # empty in client request
-    orderType @7 :OrderType;                         # optional
+    orderType @7 :OrderType;                         # empty in client request
     quantity @8 :Float64;                            # optional
     price @9 :Float64;                               # optional
-    timeInForce @10 :TimeInForce;                    # optional
-    leverageType @11 :LeverageType;                  # empty in client request
-    leverage @12 :Float64;                           # empty in client request
+    timeInForce @10 :TimeInForce;                    # empty in client request
+    expireAt @11 :Float64;                           # empty in client request
+    leverageType @12 :LeverageType;                  # empty in client request
+    leverage @13 :Float64;                           # empty in client request
 }
 
 
@@ -323,17 +325,18 @@ struct ExecutionReport {
     quantity @8 :Float64;
     price @9 :Float64;
     timeInForce @10 :TimeInForce;
-    leverageType @11 :LeverageType;
-    leverage @12 :Float64;
-    orderStatus @13 :OrderStatus;
-    filledQuantity @14 :Float64;
-    avgFillPrice @15 :Float64;
-    fee @16 :Float64;
-    creationTime @17 :Float64;
-    submissionTime @18 :Float64;
-    completionTime @19 :Float64;
-    rejectionReason @20 :Message;
-    executionType @21 :ExecutionType;
+    expireAt @11 :Float64;
+    leverageType @12 :LeverageType;
+    leverage @13 :Float64;
+    orderStatus @14 :OrderStatus;
+    filledQuantity @15 :Float64;
+    avgFillPrice @16 :Float64;
+    fee @17 :Float64;
+    creationTime @18 :Float64;
+    submissionTime @19 :Float64;
+    completionTime @20 :Float64;
+    rejectionReason @21 :Message;
+    executionType @22 :ExecutionType;
 }
 
 
