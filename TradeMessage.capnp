@@ -157,7 +157,7 @@ struct Logon {
 
 struct PlaceOrder {
     accountInfo @0 :AccountInfo;                     # required
-    clientOrderID @1 :UInt64;                        # required
+    clientOrderID @1 :Text;                          # required
     clientOrderLinkID @2 :Text;                      # optional
     orderID @3 :Text;                                # empty in client request
     symbol @4 :Text;                                 # required
@@ -175,7 +175,7 @@ struct PlaceOrder {
 struct ReplaceOrder {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
-    clientOrderID @2 :UInt64;                        # empty in client request
+    clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
@@ -193,7 +193,7 @@ struct ReplaceOrder {
 struct CancelOrder {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
-    clientOrderID @2 :UInt64;                        # empty in client request
+    clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
@@ -203,7 +203,7 @@ struct CancelOrder {
 struct GetOrderStatus {
     accountInfo @0 :AccountInfo;                     # required
     orderID @1 :Text;                                # required
-    clientOrderID @2 :UInt64;                        # empty in client request
+    clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
@@ -215,7 +215,7 @@ struct GetOrderMassStatus {
 
     struct OrderInfo {
         orderID @0 :Text;                            # required
-        clientOrderID @1 :UInt64;                    # empty in client request
+        clientOrderID @1 :Text;                      # empty in client request
         clientOrderLinkID @2: Text;                  # empty in client request
         exchangeOrderID @3 :Text;                    # empty in client request
         symbol @4 :Text;                             # empty in client request
@@ -315,7 +315,7 @@ struct Response {
 # sends as respond to place, modify, cancel, getOrderStatus requests
 struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
-    clientOrderID @1 :UInt64;
+    clientOrderID @1 :Text;
     clientOrderLinkID @2: Text;
     exchangeOrderID @3 :Text = "<UNDEFINED>";
     accountInfo @4 :AccountInfo;
