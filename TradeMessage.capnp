@@ -46,15 +46,16 @@ enum OrderStatus {
 
 
 enum ExecutionType {
-    orderAccepted @0;
-    orderRejected @1;
-    orderReplaced @2;
-    replaceRejected @3;
-    orderCanceled @4;
-    cancelRejected @5;
-    orderFilled @6;
-    statusUpdate @7;
-    statusUpdateRejected @8;
+    undefined @0;
+    orderAccepted @1;
+    orderRejected @2;
+    orderReplaced @3;
+    replaceRejected @4;
+    orderCanceled @5;
+    cancelRejected @6;
+    orderFilled @7;
+    statusUpdate @8;
+    statusUpdateRejected @9;
 }
 
 
@@ -116,8 +117,8 @@ struct TradeMessage {
 
 struct Request {
     clientID @0 :UInt64;
-    senderCompID @1 :Text;
-    accessToken @2 :Text; 
+    senderCompID @1 :Text = "<UNDEFINED>";
+    accessToken @2 :Text = "<UNDEFINED>"; 
     requestID @3 :UInt64;
 
     body :union {
@@ -136,31 +137,30 @@ struct Request {
         replaceOrder @11 :ReplaceOrder;                   # response: ExecutionReport
         cancelOrder @12 :CancelOrder;                     # response: ExecutionReport
         getOrderStatus @13 :GetOrderStatus;               # response: ExecutionReport
-        getOrderMassStatus @14 :GetOrderMassStatus;       # response: Individual ExecutionReport per message 
 
         # account-related request
-        getAccountData @15 :GetAccountData;               # response: AccountDataReport
-        getAccountBalances @16 :GetAccountBalances;       # response: AccountBalancesReport
-        getOpenPositions @17 :GetOpenPositions;           # response: OpenPositionsReport
-        getWorkingOrders @18 :GetWorkingOrders;           # response: WorkingOrdersReport
-        getCompletedOrders @19 :GetCompletedOrders;       # response: CompletedOrdersReport
-        getExchangeProperties @20 :GetExchangeProperties; # response: ExchangePropertiesReport
+        getAccountData @14 :GetAccountData;               # response: AccountDataReport
+        getAccountBalances @15 :GetAccountBalances;       # response: AccountBalancesReport
+        getOpenPositions @16 :GetOpenPositions;           # response: OpenPositionsReport
+        getWorkingOrders @17 :GetWorkingOrders;           # response: WorkingOrdersReport
+        getCompletedOrders @18 :GetCompletedOrders;       # response: CompletedOrdersReport
+        getExchangeProperties @19 :GetExchangeProperties; # response: ExchangePropertiesReport
     }
 }
 
 
 struct Logon {
-    clientSecret @0 :Text;                           # required
+    clientSecret @0 :Text = "<UNDEFINED>";           # required
     credentials @1 :List(AccountCredentials);        # required
 }
 
 
 struct PlaceOrder {
     accountInfo @0 :AccountInfo;                     # required
-    clientOrderID @1 :Text;                          # required
-    clientOrderLinkID @2 :Text;                      # optional
+    clientOrderID @1 :Text = "<NONE>";               # required
+    clientOrderLinkID @2 :Text = "<NONE>";           # optional
     orderID @3 :Text;                                # empty in client request
-    symbol @4 :Text;                                 # required
+    symbol @4 :Text = "<UNDEFINED>";                 # required
     side @5 :Side;                                   # required
     orderType @6 :OrderType = limit;                 # optional, default : LIMIT
     quantity @7 :Float64;                            # required
@@ -174,7 +174,7 @@ struct PlaceOrder {
 
 struct ReplaceOrder {
     accountInfo @0 :AccountInfo;                     # required
-    orderID @1 :Text;                                # required
+    orderID @1 :Text = "<UNDEFINED>";                # required
     clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
@@ -192,7 +192,7 @@ struct ReplaceOrder {
 
 struct CancelOrder {
     accountInfo @0 :AccountInfo;                     # required
-    orderID @1 :Text;                                # required
+    orderID @1 :Text = "<UNDEFINED>";                # required
     clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
@@ -202,26 +202,11 @@ struct CancelOrder {
 
 struct GetOrderStatus {
     accountInfo @0 :AccountInfo;                     # required
-    orderID @1 :Text;                                # required
+    orderID @1 :Text = "<UNDEFINED>";                # required
     clientOrderID @2 :Text;                          # empty in client request
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
-}
-
-
-struct GetOrderMassStatus {
-    accountInfo @0 :AccountInfo;                     # required
-
-    struct OrderInfo {
-        orderID @0 :Text;                            # required
-        clientOrderID @1 :Text;                      # empty in client request
-        clientOrderLinkID @2: Text;                  # empty in client request
-        exchangeOrderID @3 :Text;                    # empty in client request
-        symbol @4 :Text;                             # empty in client request
-    }
-
-    orderInfo @1 :List(OrderInfo);
 }
 
 
@@ -272,7 +257,7 @@ struct TestMessage {
 
 
 struct AuthorizationRefresh {
-    refreshToken @0 :Text;
+    refreshToken @0 :Text = "<UNDEFINED>";
 }
 
 
@@ -284,7 +269,7 @@ struct AuthorizationRefresh {
 
 struct Response {
     clientID @0 :UInt64;
-    senderCompID @1 :Text;
+    senderCompID @1 :Text = "<UNDEFINED>";
     requestID @2 :UInt64;
     body :union {
         # system
@@ -315,8 +300,8 @@ struct Response {
 # sends as respond to place, modify, cancel, getOrderStatus requests
 struct ExecutionReport {
     orderID @0 :Text = "<UNDEFINED>";
-    clientOrderID @1 :Text;
-    clientOrderLinkID @2: Text;
+    clientOrderID @1 :Text = "<NONE>";
+    clientOrderLinkID @2: Text  = "<NONE>";
     exchangeOrderID @3 :Text = "<UNDEFINED>";
     accountInfo @4 :AccountInfo;
     symbol @5 :Text = "<UNDEFINED>";
@@ -383,7 +368,7 @@ struct ExchangePropertiesReport{
 
 
 struct SymbolProperties{
-    symbol @0 :Text;
+    symbol @0 :Text = "<UNDEFINED>";
     pricePrecision @1 :Float64;
     quantityPrecision @2 :Float64;
     minQuantity @3 :Float64;
@@ -410,8 +395,8 @@ struct LogoffAck {
 struct AuthorizationGrant {
     success @0 :Bool;
     message @1 :Message;
-    accessToken @2 :Text;
-    refreshToken @3 :Text;
+    accessToken @2 :Text = "<UNDEFINED>";
+    refreshToken @3 :Text = "<UNDEFINED>";
     expireAt @4 :Float64; 
 }
 
