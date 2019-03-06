@@ -164,11 +164,12 @@ struct PlaceOrder {
     side @5 :Side;                                   # required
     orderType @6 :OrderType = limit;                 # optional, default : LIMIT
     quantity @7 :Float64;                            # required
-    price @8 :Float64;                               # required for LIMIT
-    timeInForce @9 :TimeInForce = gtc;               # optional, default : GTC
-    expireAt @10 :Float64;                           # optional, for GTT only
-    leverageType @11 :LeverageType;                  # optional, default : None
-    leverage @12 :Float64;                           # optional, default : 0 (no leverage)
+    price @8 :Float64;                               # required for LIMIT, STOP_LIMIT (limit price)
+    stopPrice @9: Float64;                           # required for STOP,  STOP_LIMIT (stop price)
+    timeInForce @10 :TimeInForce = gtc;              # optional, default : GTC
+    expireAt @11 :Float64;                           # optional, for GTT only
+    leverageType @12 :LeverageType;                  # optional, default : None
+    leverage @13 :Float64;                           # optional, default : 0 (no leverage)
 }
 
 
@@ -183,10 +184,11 @@ struct ReplaceOrder {
     orderType @7 :OrderType;                         # empty in client request
     quantity @8 :Float64;                            # optional
     price @9 :Float64;                               # optional
-    timeInForce @10 :TimeInForce;                    # empty in client request
-    expireAt @11 :Float64;                           # empty in client request
-    leverageType @12 :LeverageType;                  # empty in client request
-    leverage @13 :Float64;                           # empty in client request
+    stopPrice @10: Float64;                          # optional
+    timeInForce @11 :TimeInForce;                    # empty in client request
+    expireAt @12 :Float64;                           # empty in client request
+    leverageType @13 :LeverageType;                  # empty in client request
+    leverage @14 :Float64;                           # empty in client request
 }
 
 
@@ -309,19 +311,20 @@ struct ExecutionReport {
     orderType @7 :OrderType;
     quantity @8 :Float64;
     price @9 :Float64;
-    timeInForce @10 :TimeInForce;
-    expireAt @11 :Float64;
-    leverageType @12 :LeverageType;
-    leverage @13 :Float64;
-    orderStatus @14 :OrderStatus;
-    filledQuantity @15 :Float64;
-    avgFillPrice @16 :Float64;
-    fee @17 :Float64;
-    creationTime @18 :Float64;
-    submissionTime @19 :Float64;
-    completionTime @20 :Float64;
-    rejectionReason @21 :Message;
-    executionType @22 :ExecutionType;
+    stopPrice @10: Float64; 
+    timeInForce @11 :TimeInForce;
+    expireAt @12 :Float64;
+    leverageType @13 :LeverageType;
+    leverage @14 :Float64;
+    orderStatus @15 :OrderStatus;
+    filledQuantity @16 :Float64;
+    avgFillPrice @17 :Float64;
+    fee @18 :Float64;
+    creationTime @19 :Float64;
+    submissionTime @20 :Float64;
+    completionTime @21 :Float64;
+    rejectionReason @22 :Message;
+    executionType @23 :ExecutionType;
 }
 
 
