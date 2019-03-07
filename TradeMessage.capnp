@@ -21,10 +21,12 @@ enum OrderType {
     undefined @0;
     market @1;
     limit @2;
-    stop @3;
-    stopLimit @4;
-    trailingStop @5;
-    trailingStopLimit @6;
+    stopLoss @3;
+    stopLossLimit @4;
+    takeProfit @5;
+    takeProfitLimit @6;
+    trailingStop @7;
+    trailingStopLimit @8;
 }
 
 
@@ -162,10 +164,10 @@ struct PlaceOrder {
     orderID @3 :Text;                                # empty in client request
     symbol @4 :Text = "<UNDEFINED>";                 # required
     side @5 :Side;                                   # required
-    orderType @6 :OrderType = limit;                 # optional, default : LIMIT
+    orderType @6 :OrderType = limit;                 # optional, default : limit
     quantity @7 :Float64;                            # required
-    price @8 :Float64;                               # required for LIMIT, STOP_LIMIT (limit price)
-    stopPrice @9: Float64;                           # required for STOP,  STOP_LIMIT (stop price)
+    price @8 :Float64;                               # required for limit, stopLossLimit, takeProfitLimit (limit price)
+    stopPrice @9: Float64;                           # required for stopLoss, takeProfit, stopLossLimit, takeProfitLimit (stop price)
     timeInForce @10 :TimeInForce = gtc;              # optional, default : GTC
     expireAt @11 :Float64;                           # optional, for GTT only
     leverageType @12 :LeverageType;                  # optional, default : None
