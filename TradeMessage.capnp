@@ -208,6 +208,9 @@ struct CancelOrder {
 
 struct CancelAllOrders {
     accountInfo @0 :AccountInfo;                     # required
+    symbol @1 :Text;                                 # optional
+    side @2 :Side;                                   # optional
+
 }
 
 
