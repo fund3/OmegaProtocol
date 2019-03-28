@@ -44,6 +44,7 @@ enum OrderStatus {
     rejected @10;
     expired @11;
     failed @12;
+    deferred @13;
 }
 
 
@@ -138,6 +139,7 @@ struct Request {
         placeSingleOrder @10 :PlaceOrder;                 # response: ExecutionReport
         replaceOrder @11 :ReplaceOrder;                   # response: ExecutionReport
         cancelOrder @12 :CancelOrder;                     # response: ExecutionReport
+        cancelAllOrders @20 :CancelAllOrders;             # response: ExecutionReport
         getOrderStatus @13 :GetOrderStatus;               # response: ExecutionReport
 
         # account-related request
@@ -201,6 +203,14 @@ struct CancelOrder {
     clientOrderLinkID @3: Text;                      # empty in client request
     exchangeOrderID @4 :Text;                        # empty in client request
     symbol @5 :Text;                                 # empty in client request
+}
+
+
+struct CancelAllOrders {
+    accountInfo @0 :AccountInfo;                     # required
+    symbol @1 :Text;                                 # optional
+    side @2 :Side;                                   # optional
+
 }
 
 
