@@ -372,7 +372,7 @@ struct ExecutionReport {
     exchangeOrderID @3 :Text = "<UNDEFINED>";
     accountInfo @4 :AccountInfo;
     orderClass @26 :OrderClass;
-    parentOrder @27 :Text;
+    parentOrder @27 :Text  = "<NONE>";
     subOrders @28 :List(Text);
     contingentType @24 :ContingentType;
     linkedOrders @25 :List(Text);
