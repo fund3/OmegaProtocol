@@ -17,6 +17,12 @@ enum Side {
 }
 
 
+enum OrderClass {
+    simple @0;
+    compound @1;
+}
+
+
 enum OrderType {
     undefined @0;
     market @1;
@@ -98,6 +104,41 @@ struct AccountInfo {
 }
 
 
+#######################################################################################################
+#                   CONTINGENT TYPES
+#######################################################################################################
+
+
+enum ContingentType {
+    none @0; 
+    batch @1;
+    oco @2;
+    opo @3;
+}
+
+
+# Batch (list of orders each independent of the other)
+struct Batch {
+    orders @0 :List(PlaceOrder);
+}
+
+
+# Order cancel other
+struct OCO {
+    orders @0 :List(PlaceOrder);
+}
+
+
+# Order place order(s)
+struct OPO {
+    primary @0 :PlaceOrder;
+    secondary :union{
+        batch @1 :List(PlaceOrder);
+        oco @2 :List(PlaceOrder);
+    }
+}
+
+
 
 #######################################################################################################
 #                   MESSAGE
@@ -109,6 +150,8 @@ struct TradeMessage {
         request @0 :Request;
         response @1 :Response;
     }
+
+    version @2 :Text = "1.1";
 }
 
 
@@ -137,6 +180,7 @@ struct Request {
 
         # trading requests
         placeSingleOrder @10 :PlaceOrder;                 # response: ExecutionReport
+        placeContingentOrder @21 :PlaceContingentOrder;   # response: ExecutionReport
         replaceOrder @11 :ReplaceOrder;                   # response: ExecutionReport
         cancelOrder @12 :CancelOrder;                     # response: ExecutionReport
         cancelAllOrders @20 :CancelAllOrders;             # response: ExecutionReport
@@ -174,6 +218,15 @@ struct PlaceOrder {
     expireAt @11 :Float64;                           # optional, for GTT only
     leverageType @12 :LeverageType;                  # optional, default : None
     leverage @13 :Float64;                           # optional, default : 0 (no leverage)
+}
+
+
+struct PlaceContingentOrder {
+    type :union {
+        batch @0 :Batch;
+        oco @1 :OCO;
+        opo @2 :OPO;
+    }
 }
 
 
@@ -318,6 +371,11 @@ struct ExecutionReport {
     clientOrderLinkID @2: Text  = "<NONE>";
     exchangeOrderID @3 :Text = "<UNDEFINED>";
     accountInfo @4 :AccountInfo;
+    orderClass @26 :OrderClass;
+    parentOrderID @27 :Text  = "<NONE>";
+    subOrderIDs @28 :List(Text);
+    contingentType @24 :ContingentType;
+    linkedOrderIDs @25 :List(Text);
     symbol @5 :Text = "<UNDEFINED>";
     side @6 :Side;
     orderType @7 :OrderType;

@@ -22,5 +22,5 @@ enum Exchange {
     bitstamp @9;
     itBit @10;
     okEx @11;
-    hitbtc @12;
+    hitBTC @12;
 }
