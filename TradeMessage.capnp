@@ -51,6 +51,7 @@ enum OrderStatus {
     expired @11;
     failed @12;
     deferred @13;
+    pendingUpdate @14;
 }
 
 
