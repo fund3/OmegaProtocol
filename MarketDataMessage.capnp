@@ -52,13 +52,13 @@ struct MarketDataRequest { # http://www.fixwiki.org/fixwiki/MarketDataRequest/FI
 #######################################################################################################
 
 struct MarketDataSnapshot { # http://fixwiki.org/fixwiki/MarketDataSnapshotFullRefresh/FIX.5.0SP2%2Bol
-    timestamp @0 :Float64;                  # required
-    entriesById @1 :List(EntriesById);      # required
+    timestamp @0 :Float64;                      # required
+    entriesByIdList @1 :List(EntriesById);      # required
 }
 
 struct MarketDataIncrementalRefresh { # http://fixwiki.org/fixwiki/MarketDataIncrementalRefresh/FIX.5.0SP2%2B
-    timestamp @0 :Float64;                  # required
-    entriesById @1 :List(EntriesById);      # required
+    timestamp @0 :Float64;                      # required
+    entriesByIdList @1 :List(EntriesById);      # required
 }
 
 #######################################################################################################
@@ -73,6 +73,7 @@ struct MarketDataEntry {
     size @4 :Float64;                       # required
     position @5 :UInt8;                     # optional, position in orderbook, empty if the entry is not an orderbook update
     side @6 :Text;                          # required
+    tradeId @7 :UInt64;                     # optional
     enum Action { # http://fixwiki.org/fixwiki/MDUpdateAction
         undefined @0;
         new @1;
