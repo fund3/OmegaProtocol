@@ -344,7 +344,7 @@ struct Response {
         heartbeat @3 :Void;
         test @4 :TestMessage;
         serverTime @5 :Float64;
-        system @6 : SystemMessage;
+        system @6 :SystemMessage;
 
         # logon-logoff
         logonAck @7 :LogonAck;
@@ -438,6 +438,7 @@ struct ExchangePropertiesReport{
     symbolProperties @2 :List(SymbolProperties);
     timeInForces @3 :List(TimeInForce);
     orderTypes @4 :List(OrderType);
+    exchangeLimits @5 :ExchangeLimits;
 }
 
 
@@ -449,6 +450,12 @@ struct SymbolProperties{
     maxQuantity @4 :Float64;
     marginSupported @5 :Bool;
     leverage @6 :List(Float64);
+}
+
+
+struct ExchangeLimits{
+    rateLimit @0 :UInt64;                   # max number of requests per second (soft limit which exchanges may not enforce)
+    maxWorkingOrdersNumber @1 :UInt64;      # max number of working orders per account, 0 - if no limit
 }
 
 
