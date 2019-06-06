@@ -454,10 +454,9 @@ struct SymbolProperties{
 
 
 struct ExchangeLimits{
-    rateLimit @0 :UInt64;                   # max number of requests per second
+    rateLimit @0 :UInt64;                   # max number of requests per second (soft limit which exchanges may not enforce)
     maxWorkingOrdersNumber @1 :UInt64;      # max number of working orders per account, 0 - if no limit
 }
-
 
 
 struct LogonAck {
