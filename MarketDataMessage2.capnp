@@ -16,8 +16,8 @@ struct Header {
 }
 
 
-enum Chanel {
-	ticker @0;          # ticker data
+enum Channel { 
+    ticker @0;          # ticker data
     orderbook @1;       # level 2 orderbook data
 }
 
@@ -34,13 +34,15 @@ enum Side {
 #######################################################################################################
 
 
-struct MarketDataMessage2 {
+struct MarketDataMessage {
     header @0 :Header;
 
     type :union {
         request @1 :Request;
         response @2 :Response;
     }
+
+    version @3 :Text = "1.0";
 }
 
 
@@ -50,7 +52,7 @@ struct MarketDataMessage2 {
 
 
 struct Request {
-    chanel @0 :Chanel;
+    channel @0 :Channel;
     exchange @1 :Exchange;
     symbols @2 :List(Text);
     marketDepth @3 :UInt8; 	# book depth (number of levels), 0 for full book
@@ -90,13 +92,13 @@ struct TickerData {
 struct OrderBookData {
     exchange @0 :Exchange;
     symbol @1 :Text;
-    bids @2 :List(MDEntry);
-    asks @3 :List(MDEntry);
+    bids @2 :List(MarketDataEntry);
+    asks @3 :List(MarketDataEntry);
     timestamp @4 :Float64;
 }
 
 
-struct MDEntry {
+struct MarketDataEntry {
     price @0 :Float64;
     quantity @1 :Float64;
 }
