@@ -52,10 +52,10 @@ struct MarketDataMessage {
 
 
 struct Request {
-    channel @0 :Channel;
+    channels @0 :List(Channel);
     exchange @1 :Exchange;
     symbols @2 :List(Text);
-    marketDepth @3 :UInt8; 	# book depth (number of levels), 0 for full book
+    marketDepth @3 :UInt8;    # book depth (number of levels), 0 for full book
 
     type :union {
         subscribe @4 :Void;
